@@ -1,7 +1,7 @@
 defmodule BokBokWeb.UserProfileController do
   use BokBokWeb, :controller
 
-  alias BokBok.{Accounts, Accounts.UserProfile, NearbyUserProfiles}
+  alias BokBok.{Accounts, Accounts.UserProfile}
 
   action_fallback BokBokWeb.FallbackController
 

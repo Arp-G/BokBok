@@ -63,41 +63,40 @@ defmodule BokBok.Accounts do
   end
 
   def create_or_update_user_profile(user_id, attrs \\ %{}) do
-    x =
-      UserProfile
-      |> Repo.get_by(user_id: user_id)
-      |> case do
-        nil ->
-          attrs = Map.put(attrs, "user_id", user_id)
+    UserProfile
+    |> Repo.get_by(user_id: user_id)
+    |> case do
+      nil ->
+        attrs = Map.put(attrs, "user_id", user_id)
 
-          Multi.new()
-          |> Multi.insert(
-            :user_profile,
-            %UserProfile{}
-            |> UserProfile.changeset(attrs)
-          )
+        Multi.new()
+        |> Multi.insert(
+          :user_profile,
+          %UserProfile{}
+          |> UserProfile.changeset(attrs)
+        )
 
-        user_profile ->
-          Multi.new()
-          |> Multi.update(
-            :user_profile,
-            user_profile
-            |> UserProfile.changeset(attrs)
-          )
-      end
-      # |> Multi.run(:user_profile_avatar, fn repo, %{user_profile: user_profile} ->
-      #   user_profile
-      #   |> UserProfile.avatar_changeset(attrs)
-      #   |> repo.update()
-      # end)
-      |> Repo.transaction()
-      |> case do
-        {:ok, result} ->
-          {:ok, result.user_profile}
+      user_profile ->
+        Multi.new()
+        |> Multi.update(
+          :user_profile,
+          user_profile
+          |> UserProfile.changeset(attrs)
+        )
+    end
+    # |> Multi.run(:user_profile_avatar, fn repo, %{user_profile: user_profile} ->
+    #   user_profile
+    #   |> UserProfile.avatar_changeset(attrs)
+    #   |> repo.update()
+    # end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, result} ->
+        {:ok, result.user_profile}
 
-        {:error, _, changeset, _} ->
-          {:error, changeset}
-      end
+      {:error, _, changeset, _} ->
+        {:error, changeset}
+    end
   end
 
   def get_user_profile_with_user_id!(user_id), do: Repo.get_by!(UserProfile, user_id: user_id)
