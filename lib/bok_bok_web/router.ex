@@ -28,6 +28,8 @@ defmodule BokBokWeb.Router do
     pipe_through [:api, :token_auth]
 
     get "/show", UserController, :show
+    post "/user_profile", UserProfileController, :create_or_update
+    get "/user_profile", UserProfileController, :show
   end
 
   scope "/", BokBokWeb do

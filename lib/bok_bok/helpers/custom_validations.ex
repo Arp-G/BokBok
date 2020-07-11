@@ -8,4 +8,14 @@ defmodule BokBok.Helpers.CustomValidations do
         {field, "must be of 10 to 15 digits, including country code starting with '+' symbol"}
       ]
   end
+
+  def validate_date_not_in_the_future(field, date) do
+    case Date.compare(date, Date.utc_today()) do
+      :gt ->
+        [{field, "cannot be in the future"}]
+
+      _ ->
+        []
+    end
+  end
 end
