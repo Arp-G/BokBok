@@ -1,23 +1,25 @@
 defmodule BokBokWeb.MessageChannel do
   use BokBokWeb, :channel
-
-  alias BokBok.{Accounts}
   alias BokBok.UserCommunication, as: UC
 
-  import Ecto.Query
+  def join(
+        "conversation:" <> conversation_id,
+        _payload,
+        %Phoenix.Socket{assigns: %{user_id: user_id}} = socket
+      ) do
+    if UC.correct_user?(user_id, conversation_id) do
+      send(self(), :after_join)
 
-  def join("conversation:" <> conversation_id, _payload, socket) do
-    #   if check_correct_user(socket) do
-    send(self(), :after_join)
+      messages = UC.get_conversation_messages(conversation_id)
 
-    messages = UC.get_conversation_messages(conversation_id)
-
-    {:ok, %{msg: "Connected to topic conversation:#{conversation_id}", messages: messages},
-     socket}
-
-    #   else
-    #     {:error, %{reason: "unauthorized"}}
-    #   end
+      {
+        :ok,
+        %{msg: "Connected to topic conversation:#{conversation_id}", messages: messages},
+        socket
+      }
+    else
+      {:error, %{reason: "unauthorized"}}
+    end
   end
 
   def handle_info(:after_join, socket) do
@@ -53,7 +55,7 @@ defmodule BokBokWeb.MessageChannel do
 
     broadcast!(socket, "new:msg", payload)
 
-   {:noreply, socket}
+    {:noreply, socket}
   end
 
   def terminate(reason, _arg2) do

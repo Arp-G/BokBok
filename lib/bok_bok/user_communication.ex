@@ -43,6 +43,13 @@ defmodule BokBok.UserCommunication do
     |> Repo.all()
   end
 
+  def correct_user?(user_id, conversation_id) do
+    from(uc in UserConversation,
+      where: uc.user_id == ^user_id and uc.conversation_id == ^conversation_id
+    )
+    |> Repo.one()
+  end
+
   def create_or_get_private_conversation(user_id, receiver_id) do
     get_user_private_conversations(user_id)
     |> intersect(^get_user_private_conversations(receiver_id))
