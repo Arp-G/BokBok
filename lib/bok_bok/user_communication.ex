@@ -1,5 +1,6 @@
 defmodule BokBok.UserCommunication do
   alias BokBok.Repo
+  alias BokBok.Accounts.{User, UserProfile}
   alias BokBok.UserCommunication.{Chat, Conversation, UserConversation}
   import Ecto.Query
   alias Ecto.Multi
@@ -7,9 +8,39 @@ defmodule BokBok.UserCommunication do
   def create_new_message(user_id, conversation_id, attrs) do
     attrs
     |> Map.put(:user_id, user_id)
-    |> Map.put(:Conversation_id, conversation_id)
+    |> Map.put(:conversation_id, conversation_id)
     |> Chat.changeset()
     |> Repo.insert()
+
+    # Either do this or keep a separate table to keep track of when the conversation was lastupdated and what was the last message
+    # updated_at = DateTime.utc_now()
+
+    # from(conv in Conversation, where: conv.id == ^conversation_id)
+    # |> update(set: [updated_at: ^updated_at])
+    # |> Repo.update_all([])
+  end
+
+  def get_conversation_messages(conv_id) do
+    from(c in Chat,
+      join: conv in Conversation,
+      on: conv.id == c.conversation_id,
+      left_join: up in UserProfile,
+      on: up.user_id == c.user_id,
+      order_by: [desc: c.inserted_at],
+      where: conv.id == ^conv_id,
+      select: %{message: c.message, name: up.name, time: c.inserted_at}
+    )
+    |> Repo.all()
+  end
+
+  def get_users_conversations(user_id, type \\ :private) do
+    from(conv in Conversation,
+      join: uc in UserConversation,
+      on: uc.conversation_id == conv.id,
+      where: conv.type == ^type and uc.user_id == ^user_id,
+      order_by: [desc: conv.updated_at]
+    )
+    |> Repo.all()
   end
 
   def create_or_get_private_conversation(user_id, receiver_id) do
@@ -42,9 +73,13 @@ defmodule BokBok.UserCommunication do
           |> repo.insert()
         end)
         |> Repo.transaction()
+        |> case do
+          %{conversation: conversation} -> conversation
+          _ -> {:error, "could not create conversation"}
+        end
 
       conversation ->
-        conversation.id
+        conversation
     end
   end
 

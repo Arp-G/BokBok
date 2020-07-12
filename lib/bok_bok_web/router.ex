@@ -30,6 +30,8 @@ defmodule BokBokWeb.Router do
     get "/show", UserController, :show
     post "/user_profile", UserProfileController, :create_or_update
     get "/user_profile", UserProfileController, :show
+    get "/get_conversation", ConversationController, :create_conversation
+    get "/conversations", ConversationController, :user_conversations
   end
 
   scope "/", BokBokWeb do

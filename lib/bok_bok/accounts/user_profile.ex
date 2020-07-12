@@ -1,5 +1,6 @@
 defmodule BokBok.Accounts.UserProfile do
   use Ecto.Schema
+  @timestamps_opts [type: :utc_datetime]
   # use Arc.Ecto.Schema
 
   import Ecto.Changeset

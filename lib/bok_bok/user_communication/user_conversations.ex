@@ -1,5 +1,6 @@
 defmodule BokBok.UserCommunication.UserConversation do
   use Ecto.Schema
+  @timestamps_opts [type: :utc_datetime]
   import Ecto.Changeset
   alias BokBok.{Accounts, UserCommunication}
 

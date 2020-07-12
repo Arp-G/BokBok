@@ -1,13 +1,15 @@
 defmodule BokBok.UserCommunication.Chat do
   use Ecto.Schema
+  @timestamps_opts [type: :utc_datetime]
   import Ecto.Changeset
+  alias BokBok.Accounts.User
 
-  schema "chat" do
+  schema "chats" do
     field :message, :string
     # field :file, :string
 
-    belongs_to :user, Accounts.User, foreign_key: :user_id
-    belongs_to :conversations, Accounts.User, foreign_key: :conversation_id
+    belongs_to :user, User, foreign_key: :user_id
+    belongs_to :conversations, User, foreign_key: :conversation_id
 
     timestamps()
   end
@@ -20,6 +22,6 @@ defmodule BokBok.UserCommunication.Chat do
       :conversation_id
     ])
     |> assoc_constraint(:user)
-    |> assoc_constraint(:conversation)
+    |> assoc_constraint(:conversations)
   end
 end
