@@ -1,8 +1,10 @@
 defmodule BokBok.Accounts.User do
   use Ecto.Schema
+  @timestamps_opts [type: :utc_datetime]
   import Ecto.Changeset
 
   alias BokBok.{Helpers.ChangesetHelpers, Helpers.CustomValidations}
+  alias BokBok.UserCommunication
 
   schema "users" do
     field :username, :string, null: false
@@ -13,6 +15,11 @@ defmodule BokBok.Accounts.User do
     field :last_sign_in_ip, :string
 
     field :password, :string, virtual: true
+
+    has_one :user_profile, BokBok.Accounts.UserProfile
+
+    many_to_many :conversations, UserCommunication.Conversation,
+      join_through: "user_conversations"
 
     timestamps()
   end
