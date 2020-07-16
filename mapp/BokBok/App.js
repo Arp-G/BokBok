@@ -1,114 +1,60 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import AccountScreen from './src/screens/AccountsScreen';
+import ChatListScreen from './src/screens/ChatListScreen';
+import ChatPageScreen from './src/screens/ChatPageScreen';
+import GroupChatListScreen from './src/screens/GroupChatListScreen';
+import GroupChatPageScreen from './src/screens/GroupChatPageScreen';
+import ResolveAuthScreen from './src/screens/ResolveAuthScreen';
+import SignupScreen from './src/screens/SignupScreen';
+import SigninScreen from './src/screens/SigninScreen';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const Stack = createStackNavigator();
+const ChatStack = createStackNavigator();
+const GroupChatStack = createStackNavigator();
+const AuthStack = createStackNavigator();
+const Tab = createBottomTabNavigator()
 
-const App: () => React$Node = () => {
+const Auth = () => (
+  <AuthStack.Navigator>
+    <AuthStack.Screen name="SignUp" component={SignupScreen} />
+    <AuthStack.Screen name="SignIn" component={SigninScreen} />
+  </AuthStack.Navigator>
+);
+
+const ChatStackComponent = () => (
+  <ChatStack.Navigator>
+    <ChatStack.Screen name="ChatList" component={ChatListScreen} />
+    <ChatStack.Screen name="ChatPage" component={ChatPageScreen} />
+  </ChatStack.Navigator>
+);
+
+const GroupChatStackComponent = () => (
+  <GroupChatStack.Navigator>
+    <GroupChatStack.Screen name="GroupChatList" component={GroupChatListScreen} />
+    <GroupChatStack.Screen name="GroupChatPage" component={GroupChatPageScreen} />
+  </GroupChatStack.Navigator>
+);
+
+const Chat = () => (
+  <Tab.Navigator>
+    <Tab.Screen name='ChatFlow' component={ChatStackComponent} />
+    <Tab.Screen name='GroupChatFlow' component={GroupChatStackComponent} />
+    <Tab.Screen name='Accounts' component={AccountScreen} />
+  </Tab.Navigator>
+);
+
+export default () => {
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Bok Bok</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="ResolveAuth" component={ResolveAuthScreen} />
+        <Stack.Screen name="Auth" component={Auth} />
+        <Stack.Screen name="Chat" component={Chat} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
-
-export default App;
