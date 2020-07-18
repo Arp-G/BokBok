@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Text, Button, Input } from 'react-native-elements';
@@ -12,6 +12,23 @@ const SigninScreen = ({ signin, navigation }) => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, seterror] = useState('');
+
+  const clearState = () => {
+    console.log("Cleared State !")
+    setUsername('');
+    setPassword('');
+    seterror('');
+  }
+
+  useEffect(() => {
+    const removeListener = navigation.addListener('blur', () => {
+      clearState();
+    });
+
+    return removeListener; // Remove listener
+  });
+
 
   const onSubmit = async ({ username, password }) => {
 

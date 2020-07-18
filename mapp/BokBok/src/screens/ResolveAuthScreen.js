@@ -4,6 +4,7 @@ import { signin } from '../actions/auth';
 import AsyncStorage from '@react-native-community/async-storage';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+var Spinner = require('react-native-spinkit');
 
 
 const ResolveAuthScreen = ({ navigation, signin }) => {
@@ -23,7 +24,11 @@ const ResolveAuthScreen = ({ navigation, signin }) => {
     tryLocalSignin();
   }, []);
 
-  return null;
+  return (
+    <>
+      <Spinner isVisible={true} type={'9CubeGrid'} />
+    </>
+  );
 };
 
 const styles = StyleSheet.create({});

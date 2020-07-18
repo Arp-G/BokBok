@@ -10,6 +10,8 @@ target 'BokBok' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
+  pod 'react-native-spinkit', :path => '../node_modules/react-native-spinkit'
+
   target 'BokBokTests' do
     inherit! :complete
     # Pods for testing
