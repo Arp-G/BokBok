@@ -20,9 +20,10 @@ defmodule BokBokWeb.UserController do
 
   def create(conn, attrs) do
     with {:ok, %User{} = user} <- Accounts.create_user(attrs) do
-      conn
-      |> put_status(:created)
-      |> render("show.json", user: user)
+      {:ok, token, username, id} =
+        Accounts.token_sign_in(current_ip(conn), attrs["username"], attrs["password"])
+
+      render(conn, "token.json", token: token, username: username, id: id)
     end
   end
 

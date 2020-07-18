@@ -36,11 +36,6 @@ defmodule BokBok.Accounts.User do
     |> update_change(:username, &String.downcase/1)
     |> unique_constraint(:username)
     |> unique_constraint(:phone_number)
-    |> validate_confirmation(
-      :password,
-      required: true,
-      message: "does not match password"
-    )
     |> ChangesetHelpers.put_password_hash()
   end
 
