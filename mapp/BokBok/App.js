@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import configureStore from './src/stores/configureStore';
 import AccountScreen from './src/screens/AccountsScreen';
 import ChatListScreen from './src/screens/ChatListScreen';
@@ -13,13 +13,15 @@ import GroupChatPageScreen from './src/screens/GroupChatPageScreen';
 import ResolveAuthScreen from './src/screens/ResolveAuthScreen';
 import SignupScreen from './src/screens/SignupScreen';
 import SigninScreen from './src/screens/SigninScreen';
+import { signin } from './src/actions/auth';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const store = configureStore();
 const Stack = createStackNavigator();
 const ChatStack = createStackNavigator();
 const GroupChatStack = createStackNavigator();
 const AuthStack = createStackNavigator();
-const Tab = createBottomTabNavigator()
+const Tab = createMaterialBottomTabNavigator()
 
 const Auth = () => (
   <AuthStack.Navigator>
@@ -51,13 +53,42 @@ const Main = () => (
 );
 
 export default () => {
+
+  const [isLoading, setLoading] = useState(true);
+  //const [isSignedIn, setSignedIn] = useState(false);
+
+  const tryLocalSignin = async () => {
+    const token = await AsyncStorage.getItem('token');
+    if (token) {
+      store.dispatch(signin(token));
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    tryLocalSignin();
+  }, []);
+
+
+  if (isLoading) {
+    return <ResolveAuthScreen />;
+  }
+
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="ResolveAuth" component={ResolveAuthScreen} />
-          <Stack.Screen name="Auth" component={Auth} />
-          <Stack.Screen name="Main" component={Main} />
+        <Stack.Navigator screenOptions={{
+          headerShown: false
+        }} >
+
+          {store.getState().token && store.getState().token != '' ? (
+            <>
+              <Stack.Screen name="Main" component={Main} />
+            </>
+          ) : (
+              <Stack.Screen name="Auth" component={Auth} />
+            )}
+
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

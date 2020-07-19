@@ -1,38 +1,42 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { signin } from '../actions/auth';
-import AsyncStorage from '@react-native-community/async-storage';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 var Spinner = require('react-native-spinkit');
 
-
-const ResolveAuthScreen = ({ navigation, signin }) => {
-
-  const tryLocalSignin = async () => {
-    const token = await AsyncStorage.getItem('token');
-    if (token) {
-      signin(token);
-      navigation.navigate("Main", { screen: 'Accounts' });
-    }
-    else {
-      navigation.navigate("Auth", { screen: 'SignIn' });
-    }
-  }
-
-  useEffect(() => {
-    tryLocalSignin();
-  }, []);
+const ResolveAuthScreen = () => {
 
   return (
-    <>
-      <Spinner isVisible={true} type={'9CubeGrid'} />
-    </>
+    <View style={styles.splash}>
+      <Text style={styles.title}> Bok Bok !</Text>
+      <Spinner style={styles.spinner} isVisible={true} size={100} type={'9CubeGrid'} color='#d35400' />
+      <Text style={styles.author}> ... by Arpan</Text>
+    </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  splash: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#262626'
+  },
+  spinner: {
+    paddingTop: 200
+  },
+  title: {
+    fontSize: 80,
+    color: 'white',
+    fontFamily: 'cursive',
+    fontWeight: 'bold'
+  },
+  author: {
+    fontSize: 20,
+    color: 'red',
+    fontStyle: 'italic',
+    fontWeight: 'bold'
+  }
+}
+);
 
-const mapDispatchToProps = dispatch => bindActionCreators({ signin }, dispatch);
 
-export default connect(null, mapDispatchToProps)(ResolveAuthScreen);
+export default ResolveAuthScreen;
