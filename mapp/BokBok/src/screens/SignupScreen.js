@@ -13,6 +13,7 @@ const SignupScreen = ({ signin, navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [phone_number, setPhoneNumber] = useState('');
+  const [error, setError] = useState({});
 
 
   const onSubmit = async ({ username, phone_number, password }) => {
@@ -26,8 +27,7 @@ const SignupScreen = ({ signin, navigation }) => {
       signin(reponse.data.token);
       navigation.navigate('Main', { screen: 'Accounts' });
     } catch (err) {
-      // TODO: show toast
-      console.log(err);
+      setError(err.response.data.errors);
     }
 
   }
@@ -53,6 +53,9 @@ const SignupScreen = ({ signin, navigation }) => {
           nestedRoute={{ screen: 'SignIn' }}
           text="Already have an account? Sign in instead!"
         />
+        <Text>
+          {JSON.stringify(error)}
+        </Text>
         <Button
           title="Sign Up !"
           onPress={() => onSubmit({ username, phone_number, password })}

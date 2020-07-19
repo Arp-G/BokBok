@@ -12,13 +12,13 @@ const SigninScreen = ({ signin, navigation }) => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, seterror] = useState('');
+  const [error, setError] = useState('');
 
   const clearState = () => {
     console.log("Cleared State !")
     setUsername('');
     setPassword('');
-    seterror('');
+    setError('');
   }
 
   useEffect(() => {
@@ -41,8 +41,7 @@ const SigninScreen = ({ signin, navigation }) => {
       signin(reponse.data.token);
       navigation.navigate('Main', { screen: 'Accounts' });
     } catch (err) {
-      // TODO: show toast
-      console.log(err);
+      setError('Wrong username or password !');
     }
 
   }
@@ -64,6 +63,9 @@ const SigninScreen = ({ signin, navigation }) => {
           nestedRoute={{ screen: 'SignUp' }}
           text="Don't have an account? Sign up now!"
         />
+        <Text>
+          {error}
+        </Text>
         <Button
           title="Sign In !"
           onPress={() => onSubmit({ username, password })}
