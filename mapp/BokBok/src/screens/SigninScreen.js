@@ -39,7 +39,7 @@ const SigninScreen = ({ signin, navigation }) => {
       await AsyncStorage.setItem('token', reponse.data.token);
       console.log(reponse.data.token);
       signin(reponse.data.token);
-      navigation.navigate('Main', { screen: 'Accounts' });
+     // navigation.navigate('Main', { screen: 'Accounts' });
     } catch (err) {
       setError('Wrong username or password !');
     }
