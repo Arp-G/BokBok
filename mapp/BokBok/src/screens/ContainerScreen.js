@@ -7,7 +7,7 @@ import ChatListScreen from './ChatListScreen';
 import ChatPageScreen from './ChatPageScreen';
 import GroupChatListScreen from './GroupChatListScreen';
 import GroupChatPageScreen from './GroupChatPageScreen';
-import ResolveAuthScreen from './ResolveAuthScreen';
+import SplashScreen from './SplashScreen';
 import SignupScreen from './SignupScreen';
 import SigninScreen from './SigninScreen';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -20,10 +20,16 @@ const ContainerScreen = ({ token, isLoading, restore_token }) => {
     console.log("TOKEN: " + token);
 
     const tryLocalSignin = async () => {
-        const token = await AsyncStorage.getItem('token');
-        if (token) {
-            restore_token(token);
+
+        let token;
+
+        try {
+            token = await AsyncStorage.getItem('token');
+        } catch (e) {
+            console.log("Failed !");
         }
+
+        restore_token(token);
     }
 
     useEffect(() => {
@@ -65,8 +71,10 @@ const ContainerScreen = ({ token, isLoading, restore_token }) => {
         </Tab.Navigator>
     );
 
+    console.log("IS LOADING: " + isLoading)
+
     if (isLoading) {
-        return <ResolveAuthScreen />;
+        return <SplashScreen />;
     }
 
     return (
@@ -76,7 +84,7 @@ const ContainerScreen = ({ token, isLoading, restore_token }) => {
             }} >
 
                 {
-                    (token && token != '')
+                    token
                         ? (<Stack.Screen name="Main" component={Main} />)
                         : (<Stack.Screen name="Auth" component={Auth} />)
                 }
@@ -86,7 +94,7 @@ const ContainerScreen = ({ token, isLoading, restore_token }) => {
     );
 }
 
-const mapStateToProps = (state) => ({ token: state.token, isLoading: state.isLoading });
+const mapStateToProps = ({ auth: { token: token, isLoading: isLoading } }) => ({ token, isLoading });
 
 const mapDispatchToProps = dispatch => bindActionCreators({ restore_token }, dispatch);
 

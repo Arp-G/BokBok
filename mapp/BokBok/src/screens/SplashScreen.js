@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 var Spinner = require('react-native-spinkit');
 
-const ResolveAuthScreen = () => {
+const SplashScreen = () => {
 
   return (
     <View style={styles.splash}>
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
 );
 
 
-export default ResolveAuthScreen;
+export default SplashScreen;

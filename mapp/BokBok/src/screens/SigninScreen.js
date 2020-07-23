@@ -7,6 +7,7 @@ import bokbokApi from '../api/bokbok';
 import { signin } from '../actions/auth';
 import { connect } from 'react-redux';
 import NavLink from '../components/NavLink';
+import ErrorList from '../components/ErrorList';
 
 const SigninScreen = ({ signin, navigation }) => {
 
@@ -39,7 +40,6 @@ const SigninScreen = ({ signin, navigation }) => {
       await AsyncStorage.setItem('token', reponse.data.token);
       console.log(reponse.data.token);
       signin(reponse.data.token);
-     // navigation.navigate('Main', { screen: 'Accounts' });
     } catch (err) {
       setError('Wrong username or password !');
     }
@@ -58,14 +58,12 @@ const SigninScreen = ({ signin, navigation }) => {
           onChangeText={setPassword}
           secureTextEntry
         />
+        {error ? (<ErrorList data={[error]} />) : null}
         <NavLink
           routeName="Auth"
           nestedRoute={{ screen: 'SignUp' }}
           text="Don't have an account? Sign up now!"
         />
-        <Text>
-          {error}
-        </Text>
         <Button
           title="Sign In !"
           onPress={() => onSubmit({ username, password })}

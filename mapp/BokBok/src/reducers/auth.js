@@ -1,6 +1,6 @@
 import { SIGN_IN, SIGN_OUT, RESTORE_TOKEN } from '../constants/actionTypes';
 const initialState = {
-    token: '',
+    token: null,
     isLoading: true
 };
 const authReducer = (state = initialState, action) => {
@@ -20,7 +20,7 @@ const authReducer = (state = initialState, action) => {
         case SIGN_OUT:
             return {
                 ...state,
-                token: ''
+                token: null
             }
         default:
             return state;
