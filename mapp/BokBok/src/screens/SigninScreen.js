@@ -8,18 +8,21 @@ import { signin } from '../actions/auth';
 import { connect } from 'react-redux';
 import NavLink from '../components/NavLink';
 import ErrorList from '../components/ErrorList';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const SigninScreen = ({ signin, navigation }) => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const clearState = () => {
     console.log("Cleared State !")
     setUsername('');
     setPassword('');
     setError('');
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -34,29 +37,32 @@ const SigninScreen = ({ signin, navigation }) => {
   const onSubmit = async ({ username, password }) => {
 
     try {
-
+      setLoading(true);
       const reponse = await bokbokApi.post('/sign_in', { username, password });
-
       await AsyncStorage.setItem('token', reponse.data.token);
       console.log(reponse.data.token);
       signin(reponse.data.token);
     } catch (err) {
+      setLoading(false);
       setError('Wrong username or password !');
     }
 
   }
 
   return (
-    <View>
+    <View style={styles.form}>
       <>
         <Text h3>Sign In to Bok Bok</Text>
         <Input label="Username"
           onChangeText={setUsername}
           autoCapitalize="none"
-          autoCorrect={false} />
+          autoCorrect={false}
+          leftIcon={{ type: 'font-awesome', name: 'user' }}
+        />
         <Input label="Password"
           onChangeText={setPassword}
           secureTextEntry
+          leftIcon={{ type: 'font-awesome', name: 'lock' }}
         />
         {error ? (<ErrorList data={[error]} />) : null}
         <NavLink
@@ -67,6 +73,10 @@ const SigninScreen = ({ signin, navigation }) => {
         <Button
           title="Sign In !"
           onPress={() => onSubmit({ username, password })}
+          loading={loading}
+          buttonStyle={
+            styles.button
+          }
         />
       </>
     </View>
@@ -84,7 +94,20 @@ const SigninScreen = ({ signin, navigation }) => {
 const mapDispatchToProps = dispatch => bindActionCreators({ signin }, dispatch);
 
 
-// const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  button: { 
+    width: 200 ,
+    marginLeft: 15,
+    marginTop:30
+  },
+  form: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    width: '100%',
+    padding: 20
+  }
+});
 
 export default connect(null, mapDispatchToProps)(SigninScreen);
 
