@@ -1,10 +1,17 @@
-import { SIGN_IN, SIGN_OUT } from '../constants/actionTypes';
+import { SIGN_IN, SIGN_OUT, RESTORE_TOKEN } from '../constants/actionTypes';
 const initialState = {
-    token: ''
+    token: null,
+    isLoading: true
 };
 const authReducer = (state = initialState, action) => {
 
     switch (action.type) {
+        case RESTORE_TOKEN:
+            return {
+                ...state,
+                token: action.payload,
+                isLoading: false
+            }
         case SIGN_IN:
             return {
                 ...state,
@@ -13,7 +20,7 @@ const authReducer = (state = initialState, action) => {
         case SIGN_OUT:
             return {
                 ...state,
-                token: ''
+                token: null
             }
         default:
             return state;
