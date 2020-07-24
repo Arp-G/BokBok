@@ -11,7 +11,7 @@ const AccountsScreen = ({ signout, navigation }) => {
   const logout = async () => {
     await AsyncStorage.removeItem('token');
     signout();
-    navigation.navigate('Auth', 'SignIn');
+    // navigation.navigate('Auth', 'SignIn');
   }
 
   return (

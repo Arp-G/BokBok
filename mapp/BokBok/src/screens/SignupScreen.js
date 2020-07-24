@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Text, Button, Input } from 'react-native-elements';
 import { bindActionCreators } from 'redux';
@@ -7,12 +7,14 @@ import bokbokApi from '../api/bokbok';
 import { signin } from '../actions/auth';
 import { connect } from 'react-redux';
 import NavLink from '../components/NavLink';
+import ErrorList from '../components/ErrorList';
 
 const SignupScreen = ({ signin, navigation }) => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [phone_number, setPhoneNumber] = useState('');
+  const [error, setError] = useState({});
 
 
   const onSubmit = async ({ username, phone_number, password }) => {
@@ -26,8 +28,7 @@ const SignupScreen = ({ signin, navigation }) => {
       signin(reponse.data.token);
       navigation.navigate('Main', { screen: 'Accounts' });
     } catch (err) {
-      // TODO: show toast
-      console.log(err);
+      setError(err.response.data.errors);
     }
 
   }
@@ -40,14 +41,19 @@ const SignupScreen = ({ signin, navigation }) => {
           onChangeText={setUsername}
           autoCapitalize="none"
           autoCorrect={false} />
+        {error["username"] ? (<ErrorList field="Username" data={error["username"]} />) : null}
+
+
         <Input label="Phone Number"
           onChangeText={setPhoneNumber}
           keyboardType={'phone-pad'}
         />
+        {error["phone_number"] ? (<ErrorList field="Phone number" data={error["phone_number"]} />) : null}
         <Input label="Password"
           onChangeText={setPassword}
           secureTextEntry
         />
+        {error["password"] ? (<ErrorList field="Password" data={error["password"]} />) : null}
         <NavLink
           routeName="Auth"
           nestedRoute={{ screen: 'SignIn' }}

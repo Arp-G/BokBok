@@ -7,18 +7,19 @@ import bokbokApi from '../api/bokbok';
 import { signin } from '../actions/auth';
 import { connect } from 'react-redux';
 import NavLink from '../components/NavLink';
+import ErrorList from '../components/ErrorList';
 
 const SigninScreen = ({ signin, navigation }) => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, seterror] = useState('');
+  const [error, setError] = useState('');
 
   const clearState = () => {
     console.log("Cleared State !")
     setUsername('');
     setPassword('');
-    seterror('');
+    setError('');
   }
 
   useEffect(() => {
@@ -39,10 +40,8 @@ const SigninScreen = ({ signin, navigation }) => {
       await AsyncStorage.setItem('token', reponse.data.token);
       console.log(reponse.data.token);
       signin(reponse.data.token);
-      navigation.navigate('Main', { screen: 'Accounts' });
     } catch (err) {
-      // TODO: show toast
-      console.log(err);
+      setError('Wrong username or password !');
     }
 
   }
@@ -59,6 +58,7 @@ const SigninScreen = ({ signin, navigation }) => {
           onChangeText={setPassword}
           secureTextEntry
         />
+        {error ? (<ErrorList data={[error]} />) : null}
         <NavLink
           routeName="Auth"
           nestedRoute={{ screen: 'SignUp' }}
