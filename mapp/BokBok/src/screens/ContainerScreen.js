@@ -43,21 +43,21 @@ const ContainerScreen = ({ token, isLoading, restore_token }) => {
     const Tab = createMaterialBottomTabNavigator()
 
     const Auth = () => (
-        <AuthStack.Navigator>
+        <AuthStack.Navigator screenOptions={{ headerShown: false  }}>
             <AuthStack.Screen name="SignIn" component={SigninScreen} />
             <AuthStack.Screen name="SignUp" component={SignupScreen} />
         </AuthStack.Navigator>
     );
 
     const ChatStackComponent = () => (
-        <ChatStack.Navigator>
+        <ChatStack.Navigator screenOptions={{ headerShown: false  }}>
             <ChatStack.Screen name="ChatList" component={ChatListScreen} />
             <ChatStack.Screen name="ChatPage" component={ChatPageScreen} />
         </ChatStack.Navigator>
     );
 
     const GroupChatStackComponent = () => (
-        <GroupChatStack.Navigator>
+        <GroupChatStack.Navigator screenOptions={{ headerShown: false  }}>
             <GroupChatStack.Screen name="GroupChatList" component={GroupChatListScreen} />
             <GroupChatStack.Screen name="GroupChatPage" component={GroupChatPageScreen} />
         </GroupChatStack.Navigator>

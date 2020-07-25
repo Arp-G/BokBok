@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Text, Button, Input } from 'react-native-elements';
 import { bindActionCreators } from 'redux';
@@ -7,7 +7,6 @@ import bokbokApi from '../api/bokbok';
 import { signin } from '../actions/auth';
 import { connect } from 'react-redux';
 import NavLink from '../components/NavLink';
-import ErrorList from '../components/ErrorList';
 
 const SignupScreen = ({ signin, navigation }) => {
 
@@ -15,59 +14,70 @@ const SignupScreen = ({ signin, navigation }) => {
   const [password, setPassword] = useState('');
   const [phone_number, setPhoneNumber] = useState('');
   const [error, setError] = useState({});
+  const [loading, setLoading] = useState(false);
 
-
-  const onSubmit = async ({ username, phone_number, password }) => {
+  const onSubmit = async () => {
 
     try {
-
+      setLoading(true);
       const reponse = await bokbokApi.post('/sign_up', { username, phone_number, password });
-
       await AsyncStorage.setItem('token', reponse.data.token);
       console.log(reponse.data.token);
       signin(reponse.data.token);
       navigation.navigate('Main', { screen: 'Accounts' });
     } catch (err) {
       setError(err.response.data.errors);
+      setLoading(false);
     }
 
   }
 
   return (
-    <View>
-      <>
-        <Text h3>Sign Up for Bok Bok</Text>
-        <Input label="Username"
-          onChangeText={setUsername}
-          autoCapitalize="none"
-          autoCorrect={false} />
-        {error["username"] ? (<ErrorList field="Username" data={error["username"]} />) : null}
-
-
-        <Input label="Phone Number"
-          onChangeText={setPhoneNumber}
-          keyboardType={'phone-pad'}
-        />
-        {error["phone_number"] ? (<ErrorList field="Phone number" data={error["phone_number"]} />) : null}
-        <Input label="Password"
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        {error["password"] ? (<ErrorList field="Password" data={error["password"]} />) : null}
-        <NavLink
-          routeName="Auth"
-          nestedRoute={{ screen: 'SignIn' }}
-          text="Already have an account? Sign in instead!"
-        />
-        <Text>
-          {JSON.stringify(error)}
-        </Text>
-        <Button
-          title="Sign Up !"
-          onPress={() => onSubmit({ username, phone_number, password })}
-        />
-      </>
-    </View>
+    <ImageBackground source={require('../assets/images/background.jpg')} style={{ width: '100%', height: '110%' }}>
+      <View style={styles.form}>
+        <>
+          <Text h3 h3Style={styles.heading}>Sign Up for Bok Bok</Text>
+          <Input
+            label="Username"
+            labelStyle={styles.label}
+            onChangeText={setUsername}
+            autoCapitalize="none"
+            autoCorrect={false}
+            leftIcon={{ type: 'font-awesome', name: 'user', color: 'navy' }}
+            errorMessage={error["username"] ? error["username"].join(", ") : ""}
+          />
+          <Input
+            label="Phone Number"
+            labelStyle={styles.label}
+            onChangeText={setPhoneNumber}
+            keyboardType={'phone-pad'}
+            leftIcon={{ type: 'font-awesome', name: 'phone-square', color: 'navy' }}
+            errorMessage={error["phone_number"] ? error["phone_number"].join(", ") : ""}
+          />
+          <Input
+            label="Password"
+            labelStyle={styles.label}
+            onChangeText={setPassword}
+            secureTextEntry
+            leftIcon={{ type: 'font-awesome', name: 'lock', color: 'navy' }}
+            errorMessage={error["password"] ? error["password"].join(", ") : ""}
+          />
+          <NavLink
+            routeName="Auth"
+            nestedRoute={{ screen: 'SignIn' }}
+            text="Already have an account? Sign in instead!"
+          />
+          <Button
+            title="Sign Up !"
+            onPress={onSubmit}
+            loading={loading}
+            buttonStyle={
+              styles.button
+            }
+          />
+        </>
+      </View>
+    </ImageBackground>
   );
 };
 
@@ -81,7 +91,33 @@ const SignupScreen = ({ signin, navigation }) => {
 const mapDispatchToProps = dispatch => bindActionCreators({ signin }, dispatch);
 
 
-// const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  button: {
+    width: 200,
+    marginLeft: 15,
+    marginTop: 30
+  },
+  form: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    width: '100%',
+    padding: 20,
+    marginBottom: 100
+  },
+  heading: {
+    color: 'black',
+    fontFamily: 'sans-serif',
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+    marginBottom: 50
+  },
+  label: {
+    color: 'black'
+  }
+});
 
 export default connect(null, mapDispatchToProps)(SignupScreen);
 

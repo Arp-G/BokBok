@@ -36,3 +36,8 @@ config :bok_bok, BokBokWeb.Endpoint,
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.
+
+# config :ex_aws,
+#   region: "ap-south-1",
+#   access_key_id: "AKIAQLZXPQNO7XIKB4N7",
+#   secret_access_key: "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"

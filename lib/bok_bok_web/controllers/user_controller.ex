@@ -19,7 +19,7 @@ defmodule BokBokWeb.UserController do
   end
 
   def create(conn, attrs) do
-    with {:ok, %User{} = user} <- Accounts.create_user(attrs) do
+    with {:ok, %User{}} <- Accounts.create_user(attrs) do
       {:ok, token, username, id} =
         Accounts.token_sign_in(current_ip(conn), attrs["username"], attrs["password"])
 
@@ -29,5 +29,13 @@ defmodule BokBokWeb.UserController do
 
   def show(%{assigns: %{current_user: current_user}} = conn, _params) do
     render(conn, "user.json", user: current_user)
+  end
+
+  def update_password(%{assigns: %{current_user: user}} = conn, attrs) do
+    with {:ok, %User{}} <- Accounts.update_password(user, attrs) do
+      conn
+      |> put_status(200)
+      |> json(%{message: "Password updated successfullly !"})
+    end
   end
 end

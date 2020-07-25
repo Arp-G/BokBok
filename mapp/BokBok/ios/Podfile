@@ -12,6 +12,8 @@ target 'BokBok' do
 
   pod 'react-native-spinkit', :path => '../node_modules/react-native-spinkit'
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
   target 'BokBokTests' do
     inherit! :complete
     # Pods for testing

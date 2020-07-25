@@ -1,15 +1,15 @@
 defmodule BokBok.Accounts.UserProfile do
   use Ecto.Schema
+  use Arc.Ecto.Schema
   @timestamps_opts [type: :utc_datetime]
-  # use Arc.Ecto.Schema
 
   import Ecto.Changeset
 
-  alias BokBok.{Accounts, Helpers.CustomValidations}
+  alias BokBok.{Accounts, Uploaders.Avatar, Helpers.CustomValidations}
 
   schema "user_profiles" do
     field :name, :string
-    # field :avatar, Avatar.Type
+    field :avatar, Avatar.Type
     field :dob, :date
     field :bio, :string
 
@@ -32,17 +32,18 @@ defmodule BokBok.Accounts.UserProfile do
     |> unique_constraint(:user_id)
   end
 
-  # def avatar_changeset(user_profile, attrs) do
-  #   case attrs["avatar"] do
-  #     "" ->
-  #       avatar = if user_profile.avatar, do: user_profile.avatar.file_name, else: ""
+  def avatar_changeset(user_profile, attrs) do
+    case attrs["avatar"] do
+      
+      "" ->
+        avatar = if user_profile.avatar, do: user_profile.avatar.file_name, else: ""
 
-  #       with :ok <- Avatar.delete({avatar, user_profile}) do
-  #         user_profile |> cast(attrs, [:avatar])
-  #       end
+        with :ok <- Avatar.delete({avatar, user_profile}) do
+          user_profile |> cast(attrs, [:avatar])
+        end
 
-  #     _ ->
-  #       cast_attachments(user_profile, attrs, [:avatar])
-  #   end
-  # end
+      _ ->
+        cast_attachments(user_profile, attrs, [:avatar])
+    end
+  end
 end

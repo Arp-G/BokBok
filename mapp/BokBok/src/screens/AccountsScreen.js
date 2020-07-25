@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { SafeAreaView } from 'react-navigation';
 import { signout } from '../actions/auth';
 import { connect } from 'react-redux';
+import ProfileForm from '../components/ProfileForm';
 
 const AccountsScreen = ({ signout, navigation }) => {
 
@@ -14,9 +15,11 @@ const AccountsScreen = ({ signout, navigation }) => {
     // navigation.navigate('Auth', 'SignIn');
   }
 
+
   return (
     <SafeAreaView forceInset={{ top: 'always' }}>
       <Text style={{ fontSize: 48 }}>AccountScreen</Text>
+      <ProfileForm navigation={navigation} />
       <Button title="Sign Out" onPress={logout} />
     </SafeAreaView>
   );

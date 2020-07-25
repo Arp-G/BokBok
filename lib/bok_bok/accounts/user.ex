@@ -39,6 +39,13 @@ defmodule BokBok.Accounts.User do
     |> ChangesetHelpers.put_password_hash()
   end
 
+  def password_chageset(user, attrs) do
+    user
+    |> cast(attrs, [:password])
+    |> validate_required([:password])
+    |> ChangesetHelpers.put_password_hash()
+  end
+
   def signin_details_changeset(user, attrs) do
     user
     |> cast(attrs, [:last_sign_in_ip])

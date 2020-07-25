@@ -41,6 +41,21 @@ defmodule BokBok.Accounts do
     |> Repo.update()
   end
 
+  def update_password(%User{} = user, %{"current_password" => password} = attrs) do
+    case username_password_auth(user.username, password) do
+      {:ok, user} ->
+        user
+        |> User.password_chageset(attrs)
+        |> Repo.update()
+
+      _ ->
+        {:error, "Incorrect Password !"}
+    end
+  end
+
+  def update_password(_, _),
+    do: {:error, "You must enter your current password to update your password !"}
+
   def delete_user(%User{} = user) do
     Repo.delete(user)
   end
@@ -84,15 +99,15 @@ defmodule BokBok.Accounts do
           |> UserProfile.changeset(attrs)
         )
     end
-    # |> Multi.run(:user_profile_avatar, fn repo, %{user_profile: user_profile} ->
-    #   user_profile
-    #   |> UserProfile.avatar_changeset(attrs)
-    #   |> repo.update()
-    # end)
+    |> Multi.run(:user_profile_avatar, fn repo, %{user_profile: user_profile} ->
+      user_profile
+      |> UserProfile.avatar_changeset(attrs)
+      |> repo.update()
+    end)
     |> Repo.transaction()
     |> case do
       {:ok, result} ->
-        {:ok, result.user_profile}
+        {:ok, result.user_profile_avatar}
 
       {:error, _, changeset, _} ->
         {:error, changeset}

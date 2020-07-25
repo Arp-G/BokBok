@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Text, Button, Input } from 'react-native-elements';
 import { bindActionCreators } from 'redux';
@@ -8,7 +8,6 @@ import { signin } from '../actions/auth';
 import { connect } from 'react-redux';
 import NavLink from '../components/NavLink';
 import ErrorList from '../components/ErrorList';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 const SigninScreen = ({ signin, navigation }) => {
 
@@ -50,42 +49,42 @@ const SigninScreen = ({ signin, navigation }) => {
   }
 
   return (
-    <View style={styles.form}>
-      <>
-        <Text h3>Sign In to Bok Bok</Text>
-        <Input label="Username"
-          onChangeText={setUsername}
-          autoCapitalize="none"
-          autoCorrect={false}
-          leftIcon={{ type: 'font-awesome', name: 'user' }}
-        />
-        <Input label="Password"
-          onChangeText={setPassword}
-          secureTextEntry
-          leftIcon={{ type: 'font-awesome', name: 'lock' }}
-        />
-        {error ? (<ErrorList data={[error]} />) : null}
-        <NavLink
-          routeName="Auth"
-          nestedRoute={{ screen: 'SignUp' }}
-          text="Don't have an account? Sign up now!"
-        />
-        <Text>
-          {error}
-        </Text>
-        <Button
-          title="Sign In !"
-          onPress={() => onSubmit({ username, password })}
-          loading={loading}
-          buttonStyle={
-            styles.button
-          }
-        />
-      </>
-    </View>
+    <ImageBackground source={require('../assets/images/background.jpg')} style={{ width: '100%', height: '110%' }}>
+      <View style={styles.form}>
+        <>
+          <Text h3 h3Style={styles.heading}>Sign In to Bok Bok</Text>
+          <Input label="Username"
+            labelStyle={styles.label}
+            onChangeText={setUsername}
+            autoCapitalize="none"
+            autoCorrect={false}
+            leftIcon={{ type: 'font-awesome', name: 'user', color: 'navy' }}
+          />
+          <Input label="Password"
+            labelStyle={styles.label}
+            onChangeText={setPassword}
+            secureTextEntry
+            leftIcon={{ type: 'font-awesome', name: 'lock', color: 'navy' }}
+          />
+          {error ? (<ErrorList data={[error]} />) : null}
+          <NavLink
+            routeName="Auth"
+            nestedRoute={{ screen: 'SignUp' }}
+            text="Don't have an account? Sign up now!"
+          />
+          <Button
+            title="Sign In !"
+            onPress={() => onSubmit({ username, password })}
+            loading={loading}
+            buttonStyle={
+              styles.button
+            }
+          />
+        </>
+      </View>
+    </ImageBackground>
   );
 };
-
 
 
 /*
@@ -98,17 +97,30 @@ const mapDispatchToProps = dispatch => bindActionCreators({ signin }, dispatch);
 
 
 const styles = StyleSheet.create({
-  button: { 
-    width: 200 ,
+  button: {
+    width: 200,
     marginLeft: 15,
-    marginTop:30
+    marginTop: 30
   },
   form: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
     width: '100%',
-    padding: 20
+    padding: 20,
+    marginBottom: 100
+  },
+  heading: {
+    color: 'black',
+    fontFamily: 'sans-serif',
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+    marginBottom: 50
+  },
+  label: {
+    color: 'black'
   }
 });
 
