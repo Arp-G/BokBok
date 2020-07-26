@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import bokbokApi from '../api/bokbok';
 import { Text, Button, Input } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
+var Spinner = require('react-native-spinkit');
 
-
-const PasswordForm = () => {
-
+const EditPasswordScreen = () => {
+    const navigation = useNavigation();
     const [current_password, setCurrentPassword] = useState('');
     const [password, setPassword] = useState('');
     const [saving, setSaving] = useState(false);
@@ -27,7 +29,12 @@ const PasswordForm = () => {
 
     return (
         <>
-
+            <Icon
+                style={{ paddingLeft: 10 }}
+                onPress={navigation.toggleDrawer}
+                name="md-menu"
+                size={30}
+            />
             <Input label="Current Password"
                 onChangeText={setCurrentPassword}
                 autoCapitalize="none"
@@ -43,7 +50,11 @@ const PasswordForm = () => {
                 autoCorrect={false}
                 errorMessage={error.errors && error.errors["password"] ? error.errors["password"].join(", ") : ""} />
             {saving
-                ? <Text> Saving... </Text>
+                ?
+                (<>
+                    <Text> Saving... </Text>
+                    <Spinner isVisible={true} size={20} type={'ThreeBounce'} color='#d35400' size={50} />
+                </>)
                 : null
             }
             <Button
@@ -56,4 +67,4 @@ const PasswordForm = () => {
 };
 
 
-export default PasswordForm;
+export default EditPasswordScreen;
