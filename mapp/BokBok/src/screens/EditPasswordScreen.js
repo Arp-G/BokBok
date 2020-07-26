@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { View, ImageBackground } from 'react-native';
 import bokbokApi from '../api/bokbok';
 import { Text, Button, Input } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
@@ -29,39 +29,45 @@ const EditPasswordScreen = () => {
 
     return (
         <>
-            <Icon
-                style={{ paddingLeft: 10 }}
-                onPress={navigation.toggleDrawer}
-                name="md-menu"
-                size={30}
-            />
-            <Input label="Current Password"
-                onChangeText={setCurrentPassword}
-                autoCapitalize="none"
-                secureTextEntry
-                leftIcon={{ type: 'font-awesome', name: 'phone-square', color: 'navy' }}
-                autoCorrect={false}
-                errorMessage={error.error} />
-            <Input label="Password"
-                onChangeText={setPassword}
-                autoCapitalize="none"
-                secureTextEntry
-                leftIcon={{ type: 'font-awesome', name: 'phone-square', color: 'navy' }}
-                autoCorrect={false}
-                errorMessage={error.errors && error.errors["password"] ? error.errors["password"].join(", ") : ""} />
-            {saving
-                ?
-                (<>
-                    <Text> Saving... </Text>
-                    <Spinner isVisible={true} size={20} type={'ThreeBounce'} color='#d35400' size={50} />
-                </>)
-                : null
-            }
-            <Button
-                title="Update Password !"
-                onPress={updateUserPassword}
-                diabled={saving}
-            />
+            <ImageBackground source={require('../assets/images/background4.jpg')} style={{ width: '100%', height: '100%' }}>
+                <Icon
+                    style={{ paddingLeft: 10 }}
+                    onPress={navigation.toggleDrawer}
+                    name="md-menu"
+                    size={30}
+                />
+                <Text h3 style={{ marginLeft: 30, marginTop: 30 }}> Update your password</Text>
+                <View style={{ marginTop: "25%", alignItems: 'center' }}>
+                    <Input label="Current Password"
+                        onChangeText={setCurrentPassword}
+                        autoCapitalize="none"
+                        secureTextEntry
+                        leftIcon={{ type: 'font-awesome', name: 'phone-square', color: 'navy' }}
+                        autoCorrect={false}
+                        errorMessage={error.error} />
+                    <Input label="Password"
+                        onChangeText={setPassword}
+                        autoCapitalize="none"
+                        secureTextEntry
+                        leftIcon={{ type: 'font-awesome', name: 'phone-square', color: 'navy' }}
+                        autoCorrect={false}
+                        errorMessage={error.errors && error.errors["password"] ? error.errors["password"].join(", ") : ""} />
+                    <Button
+                        title="Update Password !"
+                        onPress={updateUserPassword}
+                        diabled={saving}
+                    />
+                    {saving
+                        ?
+                        (<View style={{ paddingTop: 20 }}>
+                            <Text> Saving... </Text>
+                            <Spinner isVisible={true} size={20} type={'ThreeBounce'} color='red' size={50} />
+                        </View >)
+                        : null
+                    }
+                </View>
+            </ImageBackground>
+
         </>
     );
 };

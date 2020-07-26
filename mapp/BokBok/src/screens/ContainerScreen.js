@@ -68,25 +68,6 @@ const ContainerScreen = ({ token, isLoading, restore_token, signout }) => {
         </GroupChatStack.Navigator>
     );
 
-    // const DrawerContent = (props) => (
-    //     <View>
-    //       <View
-    //         style={{
-    //           backgroundColor: '#f50057',
-    //           height: 140,
-    //           alignItems: 'center',
-    //           justifyContent: 'center',
-    //         }}
-    //       >
-    //         <Text style={{ color: 'white', fontSize: 30 }}>
-    //           Header
-    //         </Text>
-    //       </View>
-    //       <DrawerItems {...props} />
-    //     </View>
-    //   )
-
-
     const AccountsDrawerComponent = () => (
 
         // A drawer navigator only recieves screens, To add button to drawer add a Custom component and override/pass it with drawerContent props
@@ -95,7 +76,7 @@ const ContainerScreen = ({ token, isLoading, restore_token, signout }) => {
             drawerContent={(props) => {
 
                 return (
-                    <ImageBackground source={require('../assets/images/background1.jpg')} style={{ width: '100%', height: '100%' }}>
+                    <ImageBackground source={require('../assets/images/background5.jpg')} style={{ width: '100%', height: '100%' }}>
                         <DrawerContentScrollView {...props} >
 
                             <DrawerItem

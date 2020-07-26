@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, ImageBackground } from 'react-native';
 import bokbokApi from '../api/bokbok';
-import { Text, Button, Input, Avatar, Icon } from 'react-native-elements';
+import { Text, Button, Input, Avatar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -88,8 +88,8 @@ const EditProfileScreen = () => {
     }
 
     const changeDob = (_event, date) => {
-        setDob(dob || date);
         setshowDatePicker(false);
+        setDob(date || dob);
     }
 
     useEffect(() => {
@@ -148,75 +148,75 @@ const EditProfileScreen = () => {
     }
 
     return (
-        <View style={styles.editProfile}>
-            <DrawerIcon
-                style={{ paddingLeft: 10, width: "100%" }}
-                onPress={navigation.toggleDrawer}
-                name="md-menu"
-                size={30}
-            />
-            <Avatar
-                size="xlarge"
-                rounded
-                onPress={handle_avatar_update}
-                icon={{ name: 'user', type: 'font-awesome' }}
-                showEditButton
-                overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
-                source={avatar}
-            />
+        <ImageBackground source={require('../assets/images/background1.jpg')} style={{ width: '100%', height: '100%' }}>
+            <View style={styles.editProfile}>
+                <DrawerIcon
+                    style={{ paddingLeft: 10, width: "100%" }}
+                    onPress={navigation.toggleDrawer}
+                    name="md-menu"
+                    size={30}
+                />
+                <Avatar
+                    size="xlarge"
+                    rounded
+                    onPress={handle_avatar_update}
+                    icon={{ name: 'user', type: 'font-awesome' }}
+                    showEditButton
+                    overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
+                    source={avatar}
+                />
 
-            <Input label="Name"
-                onChangeText={setName}
-                value={name}
-                activeOpacity={0.7}
-                autoCapitalize="none"
-                autoCorrect={false} />
+                <Input label="Name"
+                    onChangeText={setName}
+                    value={name}
+                    activeOpacity={0.7}
+                    autoCapitalize="none"
+                    autoCorrect={false} />
 
-            <TouchableOpacity
-                style={styles.datepicker}
-                onPress={() => setshowDatePicker(true)}>
-                <Text>
-                    <Icon
-                        reverse
-                        name='calendar'
-                        type='font-awesome'
-                        color='navy'
-                        size={12}
-                    />DOB: </Text>
-                <Text>{dob.toDateString()}</Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.datepicker}
+                    onPress={() => setshowDatePicker(true)}>
+                    <Input label="Date of Birth"
+                        editable={false}
+                        value={dob.toDateString()}
+                        activeOpacity={0.7}
+                        autoCapitalize="none"
+                        leftIcon={{ type: 'font-awesome', name: 'calendar', color: 'navy' }}
+                        autoCorrect={false} />
+                </TouchableOpacity>
 
-            {showDatePicker && <DateTimePicker
-                value={dob}
-                maximumDate={new Date()}
-                minimumDate={new Date(1920, 0, 1)}
-                mode="date"
-                display="spinner"
-                onChange={changeDob}
-                isVisible={false}
-            />}
+                {showDatePicker && <DateTimePicker
+                    value={dob}
+                    maximumDate={new Date()}
+                    minimumDate={new Date(1920, 0, 1)}
+                    mode="date"
+                    display="spinner"
+                    onChange={changeDob}
+                    isVisible={false}
+                />}
 
-            <Input label="Bio"
-                value={bio}
-                onChangeText={setBio}
-                leftIcon={{ type: 'font-awesome', name: 'user-circle-o', color: 'navy' }}
-            />
+                <Input label="Bio"
+                    value={bio}
+                    onChangeText={setBio}
+                    leftIcon={{ type: 'font-awesome', name: 'user-circle-o', color: 'navy' }}
+                />
 
-            {saving
-                ? <Text>
-                    Saving
+                {saving
+                    ? <Text>
+                        Saving
                     <Spinner style={styles.spinner} isVisible={true} size={20} type={'ThreeBounce'} color='#d35400' size={50} />
-                    {/* {`Saving... Uploaded: ${uploadPercentage}`}  Will work when upload % works*/}
-                </Text>
-                : null
-            }
+                        {/* {`Saving... Uploaded: ${uploadPercentage}`}  Will work when upload % works*/}
+                    </Text>
+                    : null
+                }
 
-            <Button
-                title="Update Profile !"
-                onPress={updateUserProfile}
-                diabled={saving}
-            />
-        </View>
+                <Button
+                    title="Update Profile !"
+                    onPress={updateUserProfile}
+                    diabled={saving}
+                />
+            </View>
+        </ImageBackground>
     );
 };
 
