@@ -11,7 +11,10 @@ defmodule BokBokWeb.ConversationView do
       name: conversation.name,
       type: conversation.type,
       created_on: conversation.inserted_at,
-      created_by: conversation.user_id
+      created_by: conversation.created_by,
+      last_sender: conversation.last_sender,
+      unseen_message_count: conversation.unseen_message_count,
+      last_message: conversation.last_message
     }
   end
 end

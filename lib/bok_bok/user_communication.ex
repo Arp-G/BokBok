@@ -1,6 +1,6 @@
 defmodule BokBok.UserCommunication do
   alias BokBok.Repo
-  alias BokBok.Accounts.{User, UserProfile}
+  alias BokBok.Accounts.User
   alias BokBok.UserCommunication.{Chat, Conversation, UserConversation}
   import Ecto.Query
   alias Ecto.Multi
@@ -11,24 +11,17 @@ defmodule BokBok.UserCommunication do
     |> Map.put(:conversation_id, conversation_id)
     |> Chat.changeset()
     |> Repo.insert()
-
-    # Either do this or keep a separate table to keep track of when the conversation was lastupdated and what was the last message
-    # updated_at = DateTime.utc_now()
-
-    # from(conv in Conversation, where: conv.id == ^conversation_id)
-    # |> update(set: [updated_at: ^updated_at])
-    # |> Repo.update_all([])
   end
 
   def get_conversation_messages(conv_id) do
     from(c in Chat,
       join: conv in Conversation,
       on: conv.id == c.conversation_id,
-      left_join: up in UserProfile,
-      on: up.user_id == c.user_id,
+      inner_join: u in User,
+      on: u.id == c.user_id,
       order_by: [desc: c.inserted_at],
       where: conv.id == ^conv_id,
-      select: %{message: c.message, name: up.name, time: c.inserted_at}
+      select: %{message: c.message, name: u.username, time: c.inserted_at}
     )
     |> Repo.all()
   end
@@ -37,10 +30,41 @@ defmodule BokBok.UserCommunication do
     from(conv in Conversation,
       join: uc in UserConversation,
       on: uc.conversation_id == conv.id,
+      left_join: u in User,
+      on: u.id == uc.last_sender_id,
+      select: %{
+        id: conv.id,
+        name: conv.name,
+        type: conv.type,
+        inserted_at: conv.inserted_at,
+        created_by: conv.user_id,
+        last_sender: u.username,
+        unseen_message_count: uc.unseen_message_count,
+        last_message: uc.last_message
+      },
       where: conv.type == ^type and uc.user_id == ^user_id,
       order_by: [desc: conv.updated_at]
     )
     |> Repo.all()
+  end
+
+  def update_unseen_message(user_id, conv_id, last_sender_id, last_message) do
+    from(uc in UserConversation,
+      where: uc.user_id == ^user_id and uc.conversation_id == ^conv_id,
+      update: [
+        set: [
+          last_sender_id: ^last_sender_id,
+          last_message: ^last_message
+        ],
+        inc: [unseen_message_count: 1]
+      ]
+    )
+    |> Repo.update_all([])
+  end
+
+  def reset_unseen_message(user_id, conv_id) do
+    from(uc in UserConversation, where: uc.user_id == ^user_id and uc.conversation_id == ^conv_id)
+    |> Repo.update_all(set: [last_sender_id: nil, last_message: nil, unseen_message_count: 0])
   end
 
   def correct_user?(user_id, conversation_id) do
@@ -81,13 +105,22 @@ defmodule BokBok.UserCommunication do
         end)
         |> Repo.transaction()
         |> case do
-          %{conversation: conversation} -> conversation
-          _ -> {:error, "could not create conversation"}
+          %{conversation: conversation} ->
+            conversation
+
+          _ ->
+            {:error, "could not create conversation"}
         end
 
       conversation ->
         conversation
     end
+  end
+
+  def list_participants_for_conversation(conv_id) do
+    from(uc in UserConversation, where: uc.conversation_id == ^conv_id)
+    |> Repo.all()
+    |> Enum.map(fn %UserConversation{user_id: user_id} -> user_id end)
   end
 
   defp get_user_private_conversations(user_id) do

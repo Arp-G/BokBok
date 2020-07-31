@@ -20,7 +20,7 @@ defmodule BokBokWeb.UserSocket do
 
             name = if user.user_profile, do: user.user_profile.name, else: user.username
 
-            user = {:ok, assign(socket, user_id: user.id, name: name)}
+            {:ok, assign(socket, user_id: user.id, name: name)}
 
           _ ->
             :error
