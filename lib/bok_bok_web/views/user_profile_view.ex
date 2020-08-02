@@ -17,7 +17,6 @@ defmodule BokBokWeb.UserProfileView do
   end
 
   defp render_image_url(user_profile) do
-    IO.inspect user_profile.avatar
     if user_profile.avatar do
       %{
         original: Avatar.url({user_profile.avatar, user_profile}, signed: true),

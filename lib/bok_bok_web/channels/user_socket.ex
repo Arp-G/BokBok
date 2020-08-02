@@ -2,6 +2,7 @@ defmodule BokBokWeb.UserSocket do
   use Phoenix.Socket
   alias BokBok.Accounts.User
 
+  channel "user:*", BokBokWeb.UserChannel
   channel "conversation:*", BokBokWeb.MessageChannel
 
   def connect(%{"token" => token}, socket, _connect_info) do

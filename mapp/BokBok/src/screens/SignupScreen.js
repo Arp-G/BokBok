@@ -20,11 +20,11 @@ const SignupScreen = ({ signin, navigation }) => {
 
     try {
       setLoading(true);
-      const reponse = await bokbokApi.post('/sign_up', { username, phone_number, password });
-      await AsyncStorage.setItem('token', reponse.data.token);
-      console.log(reponse.data.token);
-      signin(reponse.data.token);
-      navigation.navigate('Main', { screen: 'Accounts' });
+      const response = await bokbokApi.post('/sign_up', { username, phone_number, password });
+      await AsyncStorage.setItem('token', response.data.token);
+      await AsyncStorage.setItem('id', `${response.data.id}`);
+      signin(response.data.token, response.data.id);
+      navigation.navigate('Main', { screen: 'AccountsFlow' });
     } catch (err) {
       setError(err.response.data.errors);
       setLoading(false);
@@ -120,4 +120,3 @@ const styles = StyleSheet.create({
 });
 
 export default connect(null, mapDispatchToProps)(SignupScreen);
-

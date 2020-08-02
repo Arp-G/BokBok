@@ -66,11 +66,7 @@ defmodule BokBok.Accounts do
         update_user_signin_details(user, %{last_sign_in_ip: last_sign_in_ip})
 
         {:ok,
-         Phoenix.Token.sign(
-           Application.get_env(:bok_bok, BokBok.Repo)[:secret_key],
-           Application.get_env(:bok_bok, BokBok.Repo)[:salt],
-           user.id
-         ), user.username, user.id}
+         Phoenix.Token.sign( Application.get_env(:bok_bok, BokBok.Repo)[:secret_key], Application.get_env(:bok_bok, BokBok.Repo)[:salt],  user.id ), user.username, user.id}
 
       _ ->
         {:error, :unauthorized}

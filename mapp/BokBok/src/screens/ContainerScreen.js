@@ -23,6 +23,7 @@ const ContainerScreen = ({ token, isLoading, restore_token, signout }) => {
 
     const logout = async () => {
         await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('id');
         signout();
     }
 
@@ -30,10 +31,11 @@ const ContainerScreen = ({ token, isLoading, restore_token, signout }) => {
         let token;
         try {
             token = await AsyncStorage.getItem('token');
+            id = await AsyncStorage.getItem('id');
         } catch (e) {
             console.log("Failed !");
         }
-        restore_token(token);
+        restore_token(token, id);
     }
 
     useEffect(() => {

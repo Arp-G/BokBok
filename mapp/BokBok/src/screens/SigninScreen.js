@@ -17,7 +17,6 @@ const SigninScreen = ({ signin, navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const clearState = () => {
-    console.log("Cleared State !")
     setUsername('');
     setPassword('');
     setError('');
@@ -37,11 +36,13 @@ const SigninScreen = ({ signin, navigation }) => {
 
     try {
       setLoading(true);
-      const reponse = await bokbokApi.post('/sign_in', { username, password });
-      await AsyncStorage.setItem('token', reponse.data.token);
-      console.log(reponse.data.token);
-      signin(reponse.data.token);
+      const response = await bokbokApi.post('/sign_in', { username, password });
+      console.log(`${response.data.id}`);
+      await AsyncStorage.setItem('token', response.data.token);
+      await AsyncStorage.setItem('id', `${response.data.id}`);
+      signin(response.data.token, response.data.id);
     } catch (err) {
+      console.log(err);
       setLoading(false);
       setError('Wrong username or password !');
     }

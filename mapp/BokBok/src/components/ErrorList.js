@@ -3,8 +3,6 @@ import { FlatList, Text, StyleSheet } from 'react-native';
 
 export default ({ field, data }) => {
 
-    console.log(data);
-
     return (
         <FlatList
             data={data}

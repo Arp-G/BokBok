@@ -10,6 +10,7 @@ defmodule BokBok.UserCommunication.UserConversation do
 
     belongs_to :last_sender, Accounts.User, foreign_key: :last_sender_id
     belongs_to :user, Accounts.User, foreign_key: :user_id
+    belongs_to :receiver, Accounts.User, foreign_key: :receiver_id
     belongs_to :conversation, UserCommunication.Conversation, foreign_key: :conversation_id
     timestamps()
   end
@@ -18,6 +19,7 @@ defmodule BokBok.UserCommunication.UserConversation do
     user_conversation
     |> cast(attrs, [
       :user_id,
+      :receiver_id,
       :conversation_id
     ])
     |> assoc_constraint(:user)

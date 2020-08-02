@@ -21,7 +21,6 @@ const EditPasswordScreen = () => {
         } catch (err) {
             setError(err.response.data);
             console.log("ERROR !")
-            console.log(err.response.data)
         }
         setSaving(false);
     }

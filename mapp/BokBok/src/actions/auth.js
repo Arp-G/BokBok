@@ -1,9 +1,9 @@
 import { SIGN_IN, SIGN_OUT, RESTORE_TOKEN } from '../constants/actionTypes';
 
-export function signin(token) {
+export function signin(token, id) {
     return {
         type: SIGN_IN,
-        payload: token
+        payload: { token, id }
     }
 }
 
@@ -13,9 +13,9 @@ export function signout() {
     }
 }
 
-export function restore_token(token) {
+export function restore_token(token, id) {
     return {
         type: RESTORE_TOKEN,
-        payload: token
+        payload: { token, id }
     }
 }

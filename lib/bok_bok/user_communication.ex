@@ -1,6 +1,6 @@
 defmodule BokBok.UserCommunication do
   alias BokBok.Repo
-  alias BokBok.Accounts.User
+  alias BokBok.Accounts.{User, UserProfile}
   alias BokBok.UserCommunication.{Chat, Conversation, UserConversation}
   import Ecto.Query
   alias Ecto.Multi
@@ -30,15 +30,20 @@ defmodule BokBok.UserCommunication do
     from(conv in Conversation,
       join: uc in UserConversation,
       on: uc.conversation_id == conv.id,
-      left_join: u in User,
-      on: u.id == uc.last_sender_id,
+      left_join: u1 in User,
+      on: u1.id == uc.receiver_id,
+      left_join: u2 in User,
+      on: u2.id == uc.last_sender_id,
+      left_join: up in UserProfile,
+      on: up.user_id == u1.id,
       select: %{
         id: conv.id,
-        name: conv.name,
+        name: u1.username,
+        profile: up,
         type: conv.type,
         inserted_at: conv.inserted_at,
         created_by: conv.user_id,
-        last_sender: u.username,
+        last_sender: u2.username,
         unseen_message_count: uc.unseen_message_count,
         last_message: uc.last_message
       },
@@ -46,6 +51,14 @@ defmodule BokBok.UserCommunication do
       order_by: [desc: conv.updated_at]
     )
     |> Repo.all()
+    |> Enum.map(fn %{profile: profile} = item ->
+      profile =
+        if profile,
+          do: BokBokWeb.UserProfileView.render("user_profile.json", %{user_profile: profile}),
+          else: nil
+
+      Map.put(item, :profile, profile)
+    end)
   end
 
   def update_unseen_message(user_id, conv_id, last_sender_id, last_message) do
@@ -90,6 +103,7 @@ defmodule BokBok.UserCommunication do
           |> UserConversation.changeset(%{
             type: :private,
             user_id: user_id,
+            receiver_id: receiver_id,
             conversation_id: conversation.id
           })
           |> repo.insert()
@@ -99,6 +113,7 @@ defmodule BokBok.UserCommunication do
           |> UserConversation.changeset(%{
             type: :private,
             user_id: receiver_id,
+            receiver_id: user_id,
             conversation_id: conversation.id
           })
           |> repo.insert()
@@ -106,6 +121,9 @@ defmodule BokBok.UserCommunication do
         |> Repo.transaction()
         |> case do
           %{conversation: conversation} ->
+            conversation
+
+          {:ok, %{conversation: conversation}} ->
             conversation
 
           _ ->
