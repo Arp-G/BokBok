@@ -12,6 +12,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
     const [socket, setSocket] = useState(null);
     const [search, updateSearch] = useState('');
+    const [channel, setChannel] = useState(null);
 
     const fetchConversationsList = () => {
 
@@ -37,19 +38,13 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
             )
             .receive("error", err => console.log("phoenix errored", err));
 
-        channel.on("new:msg", payload => {
-            console.log(JSON.stringify(payload));
-            let msg = `Time: ${payload["time"]}  Sender: ${payload["sender"]}, Message: ${payload["body"]}`;
-            add_message(msg);
-            msgboard.scrollTo(msgboard.scrollHeight, 0);
-        })
-
         channel.on("update_unread", payload => {
             console.log("UPDATE WITH PAYLOAD " + payload);
             update_conversation(payload)
         });
 
         setSocket(socket_instance);
+        setChannel(channel);
     }
 
 
@@ -59,8 +54,13 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
             fetchConversationsList();
         });
 
+        const removeBlurListener = navigation.addListener('blur', () => {
+            channel && channel.leave();
+        });
+
         return () => {
             removeFocusListener();
+            removeBlurListener();
         };
     });
 
@@ -79,12 +79,16 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
             }}
             badge={{ value: conversation.unseen_message_count }}
+            onPress={() => {
+                navigation.navigate('ChatFlow', { screen: 'ChatPage', params: { conversation, socket } },);
+            }}
             bottomDivider
             chevron
         />);
     };
 
 
+    // ChatFlow, ChatPage
     return (
         <View>
             <SearchBar

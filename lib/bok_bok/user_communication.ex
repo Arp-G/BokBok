@@ -21,7 +21,7 @@ defmodule BokBok.UserCommunication do
       on: u.id == c.user_id,
       order_by: [desc: c.inserted_at],
       where: conv.id == ^conv_id,
-      select: %{message: c.message, name: u.username, time: c.inserted_at}
+      select: %{id: c.id, message: c.message, name: u.username, time: c.inserted_at}
     )
     |> Repo.all()
   end

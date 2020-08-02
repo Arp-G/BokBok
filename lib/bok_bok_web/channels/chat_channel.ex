@@ -58,12 +58,15 @@ defmodule BokBokWeb.MessageChannel do
           topic: "conversation:" <> conv_id
         } = socket
       ) do
-    UC.create_new_message(sender_id, conv_id, %{message: message})
+    # {id: 1, message: "hio", name: "newuser", time: "2020-08-01T21:18:10Z"}
+    {:ok, %BokBok.UserCommunication.Chat{id: id, inserted_at: time}} =
+      UC.create_new_message(sender_id, conv_id, %{message: message})
 
     payload = %{
-      time: DateTime.utc_now() |> DateTime.truncate(:millisecond),
-      sender: name,
-      body: message
+      id: id,
+      name: name,
+      message: message,
+      time: time
     }
 
     broadcast!(socket, "new:msg", payload)
