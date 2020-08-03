@@ -17,11 +17,8 @@ defmodule BokBokWeb.UserSocket do
         |> BokBok.Accounts.get_user()
         |> case do
           %User{} = user ->
-            user = BokBok.Repo.preload(user, :user_profile)
 
-            name = if user.user_profile, do: user.user_profile.name, else: user.username
-
-            {:ok, assign(socket, user_id: user.id, name: name)}
+            {:ok, assign(socket, user_id: user.id, name: user.username)}
 
           _ ->
             :error

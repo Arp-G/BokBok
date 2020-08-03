@@ -5,7 +5,7 @@ defmodule BokBok.Repo.Migrations.CreateChatTable do
     create table(:chats) do
       add :user_id, references(:users), null: false
       add :conversation_id, references(:conversations, on_delete: :delete_all), null: false
-      add :message, :string
+      add :message, :text
       add :file, :string
       timestamps()
     end

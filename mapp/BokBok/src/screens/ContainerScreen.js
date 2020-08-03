@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import ChatListScreen from './ChatListScreen';
 import ChatPageScreen from './ChatPageScreen';
@@ -46,7 +46,7 @@ const ContainerScreen = ({ token, isLoading, restore_token, signout }) => {
     const ChatStack = createStackNavigator();
     const GroupChatStack = createStackNavigator();
     const AuthStack = createStackNavigator();
-    const Tab = createMaterialBottomTabNavigator()
+    const Tab = createMaterialTopTabNavigator();
     const AccountsDrawer = createDrawerNavigator();
 
     const Auth = () => (

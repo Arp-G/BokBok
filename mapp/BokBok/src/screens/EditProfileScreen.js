@@ -60,7 +60,6 @@ const EditProfileScreen = () => {
 
         if (avatarData || avatarData == '') {
             let av = avatarData == '' ? avatarData : { name: avatarData.fileName, type: avatarData.type, uri: avatarData.uri };
-            console.log("Found image");
             data.append('avatar', av);
             config = {
                 onUploadProgress: function (progressEvent) {

@@ -64,6 +64,7 @@ defmodule BokBokWeb.MessageChannel do
 
     payload = %{
       id: id,
+      sender_id: sender_id,
       name: name,
       message: message,
       time: time
