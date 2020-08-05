@@ -29,10 +29,13 @@ defmodule BokBokWeb.Router do
 
     get "/show", UserController, :show
     post "/user_profile", UserProfileController, :create_or_update
-    patch "/update_password",  UserController, :update_password
+    patch "/update_password", UserController, :update_password
     get "/user_profile", UserProfileController, :show
     get "/get_conversation", ConversationController, :create_conversation
     get "/conversations", ConversationController, :user_conversations
+    get "/search", SearchController, :search
+    get "/search_contacts", SearchController, :search_contacts
+    get "/get_random", SearchController, :random_users
   end
 
   scope "/", BokBokWeb do

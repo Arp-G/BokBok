@@ -1,6 +1,6 @@
 defmodule BokBok.Helpers.CustomValidations do
   def validate_phone_number(field, phone_number) do
-    valid? = Regex.match?(~r/\A\+\d{10,15}\z/, phone_number)
+    valid? = Regex.match?(~r/\A\d{10,15}\z/, phone_number)
 
     if valid?,
       do: [],
