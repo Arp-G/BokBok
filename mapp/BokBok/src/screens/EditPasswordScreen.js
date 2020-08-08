@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, ImageBackground } from 'react-native';
 import bokbokApi from '../api/bokbok';
 import { Text, Button, Input } from 'react-native-elements';

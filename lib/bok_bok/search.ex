@@ -13,8 +13,8 @@ defmodule BokBok.Search do
     |> Repo.preload(:user_profile)
   end
 
-  def find_contacts(phone) do
-    from(u in User, where: u.phone_number == ^phone)
+  def find_contacts(phone_nos) do
+    from(u in User, where: u.phone_number in ^phone_nos)
     |> Repo.all()
     |> Repo.preload(:user_profile)
   end

@@ -21,7 +21,13 @@ defmodule BokBok.UserCommunication do
       on: u.id == c.user_id,
       order_by: [desc: c.inserted_at],
       where: conv.id == ^conv_id,
-      select: %{id: c.id, sender_id: c.user_id, message: c.message, name: u.username, time: c.inserted_at}
+      select: %{
+        id: c.id,
+        sender_id: c.user_id,
+        message: c.message,
+        name: u.username,
+        time: c.inserted_at
+      }
     )
     |> Repo.all()
   end
@@ -109,13 +115,7 @@ defmodule BokBok.UserCommunication do
           |> repo.insert()
         end)
         |> Multi.run(:user_conversation_receiver, fn repo, %{conversation: conversation} ->
-          %UserConversation{}
-          |> UserConversation.changeset(%{
-            type: :private,
-            user_id: receiver_id,
-            receiver_id: user_id,
-            conversation_id: conversation.id
-          })
+          %UserConversation{} |> UserConversation.changeset(%{  type: :private, user_id: receiver_id,  receiver_id: user_id, conversation_id: conversation.id })
           |> repo.insert()
         end)
         |> Repo.transaction()
@@ -141,7 +141,7 @@ defmodule BokBok.UserCommunication do
     |> Enum.map(fn %UserConversation{user_id: user_id} -> user_id end)
   end
 
-  defp get_user_private_conversations(user_id) do
+  def get_user_private_conversations(user_id) do
     from(conv in Conversation,
       join: uc in UserConversation,
       on: uc.conversation_id == conv.id,

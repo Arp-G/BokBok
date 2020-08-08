@@ -16,8 +16,7 @@ defmodule BokBokWeb.SearchView do
             name: user_profile.name,
             avatar: render_image_url(user_profile),
             dob: user_profile.dob,
-            bio: user_profile.bio,
-            user_id: user_profile.user_id
+            bio: user_profile.bio
           },
           else: nil
         )

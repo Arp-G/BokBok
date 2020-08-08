@@ -8,8 +8,8 @@ defmodule BokBokWeb.SearchController do
     render(conn, "show.json", searches: search_results)
   end
 
-  def search_contacts(conn, %{"phone" => phone}) do
-    search_results = Search.find_contacts(phone)
+  def search_contacts(conn, %{"phone_nos" => phone_nos}) do
+    search_results = Search.find_contacts(phone_nos)
     render(conn, "show.json", searches: search_results)
   end
 

@@ -2,11 +2,13 @@ import React, { useEffect } from 'react';
 import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import ChatListScreen from './ChatListScreen';
 import ChatPageScreen from './ChatPageScreen';
-import GroupChatListScreen from './GroupChatListScreen';
-import GroupChatPageScreen from './GroupChatPageScreen';
+import ExplorePageScreen from './ExplorePageScreen';
+import SearchPageScreen from './SearchPageScreen';
+import ContactsPageScreen from './ContactsPageScreen';
 import SplashScreen from './SplashScreen';
 import SignupScreen from './SignupScreen';
 import SigninScreen from './SigninScreen';
@@ -44,9 +46,9 @@ const ContainerScreen = ({ token, isLoading, restore_token, signout }) => {
 
     const Stack = createStackNavigator();
     const ChatStack = createStackNavigator();
-    const GroupChatStack = createStackNavigator();
     const AuthStack = createStackNavigator();
     const Tab = createMaterialTopTabNavigator();
+    const ExploreTab = createMaterialBottomTabNavigator();
     const AccountsDrawer = createDrawerNavigator();
 
     const Auth = () => (
@@ -63,11 +65,12 @@ const ContainerScreen = ({ token, isLoading, restore_token, signout }) => {
         </ChatStack.Navigator>
     );
 
-    const GroupChatStackComponent = () => (
-        <GroupChatStack.Navigator screenOptions={{ headerShown: false }}>
-            <GroupChatStack.Screen name="GroupChatList" component={GroupChatListScreen} />
-            <GroupChatStack.Screen name="GroupChatPage" component={GroupChatPageScreen} />
-        </GroupChatStack.Navigator>
+    const ExploreTabComponent = () => (
+        <ExploreTab.Navigator>
+            <ExploreTab.Screen name='ExplorePage' component={ExplorePageScreen} />
+            <ExploreTab.Screen name='SearchPeople' component={SearchPageScreen} />
+            <ExploreTab.Screen name='Contacts' component={ContactsPageScreen} />
+        </ExploreTab.Navigator>
     );
 
     const AccountsDrawerComponent = () => (
@@ -115,7 +118,7 @@ const ContainerScreen = ({ token, isLoading, restore_token, signout }) => {
     const Main = () => (
         <Tab.Navigator>
             <Tab.Screen name='ChatFlow' component={ChatStackComponent} />
-            <Tab.Screen name='GroupChatFlow' component={GroupChatStackComponent} />
+            <Tab.Screen name='ExploreFlow' component={ExploreTabComponent} />
             <Tab.Screen name='AccountsFlow' component={AccountsDrawerComponent} />
         </Tab.Navigator>
     );
