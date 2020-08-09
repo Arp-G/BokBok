@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "746255431164",
+    "firebase_url": "https://bokbok-885c0.firebaseio.com",
+    "project_id": "bokbok-885c0",
+    "storage_bucket": "bokbok-885c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746255431164:android:c65154850018b7443e6e79",
+        "android_client_info": {
+          "package_name": "com.bokbok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746255431164-ofse0lkgs2fnfl36n512fdgi4k3p9lrr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bokbok",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "746255431164-roat72ib5b1gah5iicni51nargqlvbpi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-jx92VIY_N0yj9OfgRumARglJr8Mfyrc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "746255431164-roat72ib5b1gah5iicni51nargqlvbpi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
