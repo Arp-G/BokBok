@@ -50,7 +50,9 @@ defmodule BokBok.MixProject do
       {:ex_aws, "~> 2.0"},
       {:ex_aws_s3, "~> 2.0"},
       {:arc_ecto, "~> 0.11.2"},
-      {:faker, "~> 0.12", only: [:dev, :test]}
+      {:faker, "~> 0.12", only: [:dev, :test]},
+      {:kadabra, "~> 0.4.4"},
+      {:pigeon, "~> 1.5.1"}
     ]
   end
 

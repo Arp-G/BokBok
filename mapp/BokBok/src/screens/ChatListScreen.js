@@ -4,7 +4,6 @@ import { ListItem, Text, SearchBar } from 'react-native-elements';
 import { load_conversations, update_conversation } from '../actions/chat';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
 import { Socket } from "phoenix";
 
 
@@ -16,7 +15,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
     const fetchConversationsList = () => {
 
-        let socket_instance = socket || new Socket("ws://cc413f95ff4d.ngrok.io/socket", { params: { token: token } });
+        let socket_instance = socket || new Socket("ws://a8bc57c9b47a.ngrok.io/socket", { params: { token: token } });
 
         socket_instance.connect()
 
@@ -32,14 +31,12 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
         channel.push("fetch_conversaions")
             .receive("ok", payload => {
-                console.log(payload);
                 load_conversations(payload.conversations)
             }
             )
             .receive("error", err => console.log("phoenix errored", err));
 
         channel.on("update_unread", payload => {
-            console.log("UPDATE WITH PAYLOAD " + payload);
             update_conversation(payload)
         });
 
@@ -65,8 +62,6 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
     });
 
     renderItem = ({ item: conversation }) => {
-
-        console.log(conversation);
 
         return (<ListItem
             title={conversation.name}

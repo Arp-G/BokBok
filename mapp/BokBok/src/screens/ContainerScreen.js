@@ -20,8 +20,41 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { ImageBackground } from 'react-native';
 import { Icon } from 'react-native-elements';
+import messaging from '@react-native-firebase/messaging';
+import database from '@react-native-firebase/database';
 
-const ContainerScreen = ({ token, isLoading, restore_token, signout }) => {
+const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
+
+    async function saveTokenToDatabase(fcm_token) {
+
+        // Save fcm token with user's id as key, token will be overwritten if the "id" key key is already present
+        try {
+            database()
+                .ref(`/users/${id}`)
+                .set({
+                    fcm_token: fcm_token,
+                })
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+
+        if (!id) return; // Avoid saving token when id is not present or not loaded
+
+        // Get the device token
+        // For more check, https://rnfirebase.io/messaging/server-integration
+        messaging()
+            .getToken()
+            .then(token => saveTokenToDatabase(token));
+
+        // Listen to whether the token changes, update token if change detected
+        return messaging().onTokenRefresh(token => saveTokenToDatabase(token));
+
+    }, [id]); // Update token whenever id changes (user logsin)
+
 
     const logout = async () => {
         await AsyncStorage.removeItem('token');
@@ -144,7 +177,7 @@ const ContainerScreen = ({ token, isLoading, restore_token, signout }) => {
     );
 }
 
-const mapStateToProps = ({ auth: { token: token, isLoading: isLoading } }) => ({ token, isLoading });
+const mapStateToProps = ({ auth: { token: token, id: id, isLoading: isLoading } }) => ({ token, id, isLoading });
 
 const mapDispatchToProps = dispatch => bindActionCreators({ restore_token, signout }, dispatch);
 

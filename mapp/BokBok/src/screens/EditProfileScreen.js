@@ -92,7 +92,6 @@ const EditProfileScreen = () => {
     }
 
     useEffect(() => {
-        console.log(navigation);
         // Every time user opens this page fetch latest user details
         const removeListener = navigation.addListener('focus', () => {
             setLoading(true);
