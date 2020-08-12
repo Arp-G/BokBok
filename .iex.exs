@@ -8,7 +8,8 @@ alias BokBok.{
   UserCommunication,
   UserCommunication.UserConversation,
   UserCommunication.Chat,
-  UserCommunication.Conversation
+  UserCommunication.Conversation,
+  FCM
 }
 
 alias BokBokWeb.{MessageChannel, UserChannel}

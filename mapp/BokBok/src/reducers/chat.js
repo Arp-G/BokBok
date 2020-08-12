@@ -12,18 +12,21 @@ const chatReducer = (state = initialState, action) => {
                 conversations: action.payload
             }
         case UPDATE_CONVERSATION_LIST:
-            console.log("PAYLOAD: " ,action.payload);
             return {
                 ...state,
-                conversations: state.conversations.map(conversation =>
-                    conversation.conversation_id == action.payload.conversation_id
-                        ? {
+                conversations: state.conversations.map(conversation => {
+                    if (conversation.id.toString() == action.payload.conversation.conversation_id) {
+                        return {
                             ...conversation,
                             unseen_message_count: conversation.unseen_message_count + 1,
                             last_message: action.payload.conversation.last_message,
                             sender_name: action.payload.conversation.sender_name
                         }
-                        : conversation)
+                    }
+                    else {
+                        return conversation;
+                    }
+                })
             }
         default:
             return state;

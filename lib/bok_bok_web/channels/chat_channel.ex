@@ -104,6 +104,11 @@ defmodule BokBokWeb.MessageChannel do
         last_message: message,
         last_sender: sender_name
       })
+
+      BokBok.FCM.send_notification([receiver_id], %{
+        title: "New message from #{sender_name}",
+        body: message
+      })
     end
   end
 

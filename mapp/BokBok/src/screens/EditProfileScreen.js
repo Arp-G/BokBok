@@ -136,14 +136,14 @@ const EditProfileScreen = () => {
         return (
             <ImageBackground source={require('../assets/images/background.jpg')} style={{ width: '100%', height: '100%' }}>
                 <View style={styles.loading}>
-                    <Text h4 style={{ color: 'navy' }} > Fetching User profile details...</Text>
+                    <Text style={{ color: 'navy', fontSize: 20 }} > Fetching User profile details...</Text>
                     <Spinner style={styles.spinner} isVisible={true} size={100} type={'Circle'} color='#d35400' size={50} />
                 </View>
             </ImageBackground>
 
 
         );
-    }
+    } 
 
     return (
         <ImageBackground source={require('../assets/images/background1.jpg')} style={{ width: '100%', height: '100%' }}>

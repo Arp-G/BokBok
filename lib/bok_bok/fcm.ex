@@ -17,7 +17,7 @@ defmodule BokBok.FCM do
         %HTTPoison.Response{status_code: 200, body: body} ->
           case Jason.decode!(body) do
             %{"fcm_token" => fcm_token} ->
-              %{id: id, fcm_token: fcm_token}
+              fcm_token
 
             _ ->
               Logger.error("Could not get FCM token for user id: #{id}")
@@ -36,7 +36,36 @@ defmodule BokBok.FCM do
     Logger.warn("No users to send notification")
   end
 
-  def send_batch_notifications(fcm_token_list, %{type: type, body: body}) do
-    # TODO
+  def send_batch_notifications(fcm_token_list, %{title: title, body: body}) do
+    payload = %{
+      "body" => body,
+      "title" => title
+    }
+
+    notification =
+      fcm_token_list
+      |> Pigeon.FCM.Notification.new()
+      |> put_data(payload)
+      # When app is in background, only data messages do not automatically generate a user-visible notification, so we nedd to add the notification in the payload
+      |> put_notification(payload)
+      |> put_priority(:high)
+      |> put_time_to_live(60 * 60 * 24)
+
+    Pigeon.FCM.push(notification,
+      on_response: fn n ->
+        case n.status do
+          :success ->
+            Logger.info("Send FCM notification")
+
+          :unauthorized ->
+            Logger.error("Failed to send FCM notification: unauthorized")
+
+          _ ->
+            n
+            |> inspect()
+            |> Logger.error()
+        end
+      end
+    )
   end
 end

@@ -12,14 +12,18 @@ const store = configureStore();
 
 export default () => {
 
+  const showNotification = remoteMessage => (showMessage({
+    message: remoteMessage.data.title,
+    description: remoteMessage.data.body,
+    type: "info",
+    duration: 4000,
+    floating: true,
+    icon: "auto"
+  }));
+
   // Handle foreground FCM notifications
   useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      showMessage({
-        message: JSON.stringify(remoteMessage),
-        type: "info",
-      });
-    });
+    const unsubscribe = messaging().onMessage(async remoteMessage => (showNotification(remoteMessage)));
 
     return unsubscribe;
   }, []);
