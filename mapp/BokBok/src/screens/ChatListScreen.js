@@ -5,7 +5,7 @@ import { load_conversations, update_conversation } from '../actions/chat';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Socket } from "phoenix";
-
+import { setSocketRef , getSocket } from '../socketRef';
 
 const ChatListScreen = ({ navigation, token, id, conversations, load_conversations, update_conversation }) => {
 
@@ -15,7 +15,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
     const fetchConversationsList = () => {
 
-        let socket_instance = socket || new Socket("ws://ff6c6c88fc53.ngrok.io/socket", { params: { token: token } });
+        let socket_instance = getSocket() || new Socket("ws://0180099def8f.ngrok.io/socket", { params: { token: token } });
 
         socket_instance.connect()
 
@@ -41,6 +41,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
         });
 
         setSocket(socket_instance);
+        setSocketRef(socket_instance);
         setChannel(channel);
     }
 

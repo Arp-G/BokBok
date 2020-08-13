@@ -19,10 +19,12 @@ const SearchPageScreen = ({ navigation }) => {
     }
   }
 
-  const addConversation = async (receiver_id) => {
+  const addConversation = async (receiver) => {
     try {
-      await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver_id } });
-      ToastAndroid.show("User added to chat List !", ToastAndroid.SHORT);
+      const response = await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver.id } });
+      const conversation = { ...receiver, receiverid: response.data.conversation_id }
+      selectedUser(null);
+      navigation.navigate('ChatFlow', { screen: 'ChatPage', params: { conversation } })
     } catch (err) {
       console.log("ERROR !", err);
     }
@@ -67,7 +69,7 @@ const SearchPageScreen = ({ navigation }) => {
             user={selectedUser}
             profile={selectedUser.user_profile}
             toggleModal={setSelectedUser}
-            addToChatList={() => addConversation(selectedUser.id)}
+            addToChatList={() => addConversation(selectedUser)}
           />
         </>
         : null

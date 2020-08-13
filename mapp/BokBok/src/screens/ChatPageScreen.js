@@ -5,8 +5,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { Socket, Presence } from "phoenix";
 import UserViewModal from '../components/userViewModal';
+import { setSocketRef , getSocket } from '../socketRef';
 
-const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation, socket } } }) => {
+const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation } } }) => {
+
+  let socket =  getSocket();
 
   const [messages, setMessages] = useState([]);
   const [channel, setChannel] = useState(null);
@@ -32,14 +35,18 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
   }
 
   const fetchMessageList = () => {
+    try {
     let channel = socket.channel(`conversation:${conversation.id}`, {});
     let presence = new Presence(channel);
 
+    
     channel.join()
       .receive("ok", resp => {
         setMessages(resp.messages);
       })
       .receive("error", resp => { console.log("Unable to join", resp) });
+
+    
 
     channel.on("new:msg", payload => {
       updateMessageList(payload);
@@ -48,6 +55,11 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
     presence.onSync(() => updateOnline(presence));
 
     setChannel(channel);
+    setSocketRef(socket);
+
+  }catch(e){
+    console.log(JSON.stringify(e))
+  }
   }
 
   useEffect(() => {
