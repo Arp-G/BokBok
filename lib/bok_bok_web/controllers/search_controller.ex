@@ -8,7 +8,18 @@ defmodule BokBokWeb.SearchController do
     render(conn, "show.json", searches: search_results)
   end
 
-  def search_contacts(conn, %{"phone_nos" => phone_nos}) do
+  def search_contacts(conn, params) do
+    phone_nos =
+      case params do
+        %{"phone_nos" => phone_nos} ->
+          x = phone_nos |> Enum.map(fn ph -> ph |> String.replace(["(", ")", "-", " "], "") end)
+          IO.inspect(x)
+          x
+
+        _ ->
+          []
+      end
+
     search_results = Search.find_contacts(phone_nos)
     render(conn, "show.json", searches: search_results)
   end

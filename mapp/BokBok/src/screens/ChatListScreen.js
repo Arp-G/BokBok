@@ -15,7 +15,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
     const fetchConversationsList = () => {
 
-        let socket_instance = socket || new Socket("ws://f01c432ddc6f.ngrok.io/socket", { params: { token: token } });
+        let socket_instance = socket || new Socket("ws://ff6c6c88fc53.ngrok.io/socket", { params: { token: token } });
 
         socket_instance.connect()
 

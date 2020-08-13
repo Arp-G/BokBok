@@ -4,13 +4,12 @@ import { Avatar, ListItem, Text, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { Socket, Presence } from "phoenix";
-import Modal from 'react-native-modal';
+import UserViewModal from '../components/userViewModal';
 
 const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation, socket } } }) => {
 
   const [messages, setMessages] = useState([]);
   const [channel, setChannel] = useState(null);
-  const [presence, setPresence] = useState(null);
   const [online, setOnline] = useState(false);
   const [chat, setChat] = useState('');
   const [isModalVisible, toggleModal] = useState(false);
@@ -49,7 +48,6 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
     presence.onSync(() => updateOnline(presence));
 
     setChannel(channel);
-    setPresence(presence);
   }
 
   useEffect(() => {
@@ -99,25 +97,13 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
   return (
     <View style={{ flex: 1 }}>
 
-      <Modal isVisible={isModalVisible}>
-        <View style={{ flex: 1 }}>
-          <View>
-            <Avatar
-              size="xlarge"
-              rounded
-              icon={{ name: 'user', type: 'font-awesome' }}
-              showEditButton
-              overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
-              source={(conversation.profile && conversation.profile.avatar && conversation.profile.avatar.original) || require('../assets/images/avatar-placeholder.png')}
-            />
-            <Text h3>{`Username: ${conversation.name}`}</Text>
-            {conversation.profile && conversation.profile.name != '' ? <Text h3>{`Username: ${conversation.profile.name}`}</Text> : null}
-            {conversation.profile && conversation.profile.dob != '' ? <Text h3>{`DOB: ${conversation.profile.dob}`}</Text> : null}
-            {conversation.profile && conversation.profile.bio != '' ? <Text h3>{`Bio: ${conversation.profile.bio}`}</Text> : null}
-          </View>
-          <Button title="Close" onPress={() => toggleModal(false)} />
-        </View>
-      </Modal>
+      <UserViewModal
+        isModalVisible={isModalVisible}
+        user={{ username: conversation.name }}
+        profile={conversation.profile}
+        toggleModal={() => toggleModal(false)}
+        addToChatList={null}
+      />
 
       <View style={{ flex: 0.1 }}>
         <TouchableOpacity onPress={() => toggleModal(true)}>
@@ -127,7 +113,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
             icon={{ name: 'user', type: 'font-awesome' }}
             showEditButton
             overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
-            source={(conversation.profile && conversation.profile.avatar && conversation.profile.avatar.thumbnail) || require('../assets/images/avatar-placeholder.png')}
+            source={{ uri: (conversation.profile && conversation.profile.avatar && conversation.profile.avatar.thumbnail) }}
           />
           <Text>
             {(conversation.profile && conversation.profile.name) || conversation.name}

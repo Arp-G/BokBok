@@ -1,12 +1,16 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Avatar, Button, Text } from 'react-native-elements';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Avatar, Button, Text, Icon } from 'react-native-elements';
 import Modal from 'react-native-modal';
 
 export default ({ isModalVisible, user, profile, toggleModal, addToChatList }) => {
     return (
-        <Modal isVisible={isModalVisible}>
-            <View style={{ flex: 1 }}>
+        <Modal
+            isVisible={isModalVisible}
+            animationIn="slideInLeft"
+            animationOut="slideOutRight"
+        >
+            <View style={styles.modal}>
                 <View>
                     <Avatar
                         size="xlarge"
@@ -14,16 +18,65 @@ export default ({ isModalVisible, user, profile, toggleModal, addToChatList }) =
                         icon={{ name: 'user', type: 'font-awesome' }}
                         showEditButton
                         overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
-                        source={(profile && profile.avatar && profile.avatar.original) || require('../assets/images/avatar-placeholder.png')}
+                        source={profile && profile.avatar ? { uri: profile.avatar.original } : null}
+                        containerStyle={styles.modalAvatar}
                     />
-                    <Text h3>{`Username: ${user.username}`}</Text>
-                    {profile && profile.name != '' ? <Text h3>{`Username: ${profile.name}`}</Text> : null}
-                    {profile && profile.dob != '' ? <Text h3>{`DOB: ${profile.dob}`}</Text> : null}
-                    {profile && profile.bio != '' ? <Text h3>{`Bio: ${profile.bio}`}</Text> : null}
+                    <Text style={styles.modalItem}>{`${user.username}`}</Text>
+                    {profile && profile.name != '' ? <Text style={styles.modalItem}>{`Name: ${profile.name}`}</Text> : null}
+                    {profile && profile.dob != '' ? <Text style={styles.modalItem}>{`DOB: ${profile.dob}`}</Text> : null}
+                    {profile && profile.bio != ''
+                        ? (
+                            <View style={{ margingBottom: 60 }}>
+                                <Text style={styles.modalItem}>{`Bio: ${profile.bio}`}</Text>
+                            </View>
+                        )
+                        : null
+                    }
                 </View>
-                <Button title="Close" onPress={() => toggleModal(false)} />
-                <Button title={"Add user to chat list..."} onPress={addToChatList} />
+                <View style={styles.modalButton}>
+                    {addToChatList &&
+                        <Button
+                            title={"Chat !"}
+                            onPress={addToChatList}
+                        />
+                    }
+                </View>
+                <View style={styles.modalButton}>
+                    <Button
+                        title="Close"
+                        onPress={() => toggleModal(false)}
+                        containertyle={styles.modalButton}
+                        raised
+                    />
+                </View>
             </View>
         </Modal>
     );
 }
+
+
+const styles = StyleSheet.create({
+    modal: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: 'grey',
+        borderWidth: 2,
+        borderRadius: 50,
+        alignItems: 'center'
+    },
+    modalAvatar: {
+        alignSelf: 'center'
+    },
+    modalItem: {
+        alignSelf: 'center',
+        fontSize: 17,
+        width: '50%',
+        padding: 4,
+        marginBottom: 10
+    },
+    modalButton: {
+        marginTop: 10,
+        width: '80%'
+    }
+
+});

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, FlatList, PermissionsAndroid, ToastAndroid } from 'react-native';
 import Contacts from 'react-native-contacts';
-import { ListItem, Text } from 'react-native-elements';
+import { ListItem, Text, Image } from 'react-native-elements';
 import UserViewModal from '../components/userViewModal';
 import bokbokApi from '../api/bokbok';
 
@@ -14,6 +14,7 @@ const ContactsPageScreen = ({ navigation }) => {
     var Spinner = require('react-native-spinkit');
 
     const fireContactSearch = async () => {
+        console.log("Searching with", userContacts)
         try {
             const resp = await bokbokApi.get('/search_contacts', {
                 params: { phone_nos: userContacts.map(contact => contact.phone_number) }
@@ -22,6 +23,8 @@ const ContactsPageScreen = ({ navigation }) => {
         } catch (err) {
             console.log("ERROR !", err)
         }
+
+        setLoading(false);
     }
 
     const addConversation = async (receiver_id) => {
@@ -74,14 +77,18 @@ const ContactsPageScreen = ({ navigation }) => {
         const removeFocusListener = navigation.addListener('focus', () => {
             setLoading(true);
             requestContactPermission();
-            fireContactSearch();
-            setLoading(false);
         });
 
         return () => {
             removeFocusListener();
         };
     });
+
+    // Fire the contacts search after the "userContacts" state is set
+    // By adding it as a dependency to "useEffect" we ensure that it is called whenever "userContacts" changes
+    useEffect(() => {
+        fireContactSearch()
+    }, [userContacts]);
 
 
     renderItem = ({ item: user }) => {
@@ -106,9 +113,18 @@ const ContactsPageScreen = ({ navigation }) => {
 
     if (loading) {
         return (
-            <View>
+            <View style={styles.container}>
                 <Text> Loading... </Text>
                 <Spinner isVisible={true} size={20} type={'ThreeBounce'} color='red' size={50} />
+            </View>
+        );
+    }
+
+    if (searchResults.length == 0) {
+        return (
+            <View style={styles.container}>
+                <Text> None of your contacts are on BokBok..</Text>
+                <Image source={require('../assets/images/sad-emoji.png')} style={{ width: 200, height: 200 }} />
             </View>
         );
     }
@@ -137,6 +153,12 @@ const ContactsPageScreen = ({ navigation }) => {
     );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+});
 
 export default ContactsPageScreen;
