@@ -1,12 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Modal } from 'react-native';
 import { Avatar, Button, Text, Icon } from 'react-native-elements';
-import Modal from 'react-native-modal';
 
 export default ({ isModalVisible, user, profile, toggleModal, startChat }) => {
     return (
         <Modal
-            isVisible={isModalVisible}
+            visible={isModalVisible}
         >
             <View style={styles.modal}>
                 <View>
@@ -55,12 +54,15 @@ export default ({ isModalVisible, user, profile, toggleModal, startChat }) => {
 
 const styles = StyleSheet.create({
     modal: {
-        flex: 1,
+        marginTop: 30,
+        flex: 0.9,
+        width: '90%',
         justifyContent: 'center',
         backgroundColor: 'grey',
         borderWidth: 2,
         borderRadius: 50,
-        alignItems: 'center'
+        alignItems: 'center',
+        alignSelf: 'center'
     },
     modalAvatar: {
         alignSelf: 'center'

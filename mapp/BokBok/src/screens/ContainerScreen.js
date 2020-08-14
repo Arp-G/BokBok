@@ -148,9 +148,19 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
         </AccountsDrawer.Navigator>
     );
 
+    //     {name: "ChatFlow", key: "ChatFlow-Z4lS4xuINQjQlJSBzxRrc", params: {…}, state: {…}}
+    // key: "ChatFlow-Z4lS4xuINQjQlJSBzxRrc"
+    // name: "ChatFlow"
+    // params:
+    // params: {conversation: {…}}
+    // screen: "ChatPage"
+
     const Main = () => (
         <Tab.Navigator>
-            <Tab.Screen name='ChatFlow' component={ChatStackComponent} />
+            <Tab.Screen name='ChatFlow'
+                component={ChatStackComponent}
+                options={({ navigation, route }) => ({ tabBarVisible: false })}
+            />
             <Tab.Screen name='ExploreFlow' component={ExploreTabComponent} />
             <Tab.Screen name='AccountsFlow' component={AccountsDrawerComponent} />
         </Tab.Navigator>

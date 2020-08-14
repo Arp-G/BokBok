@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, PermissionsAndroid, ToastAndroid } from 'react-native';
+import { StyleSheet, View, FlatList, PermissionsAndroid } from 'react-native';
 import Contacts from 'react-native-contacts';
 import { ListItem, Text, Image } from 'react-native-elements';
 import UserViewModal from '../components/userViewModal';
@@ -83,12 +83,6 @@ const ContactsPageScreen = ({ navigation }) => {
             removeFocusListener();
         };
     });
-
-    // Fire the contacts search after the "userContacts" state is set
-    // By adding it as a dependency to "useEffect" we ensure that it is called whenever "userContacts" changes
-    // useEffect(() => {
-    //     fireContactSearch()
-    // });
 
 
     renderItem = ({ item: user }) => {
