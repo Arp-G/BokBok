@@ -3,12 +3,10 @@ import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Avatar, Button, Text, Icon } from 'react-native-elements';
 import Modal from 'react-native-modal';
 
-export default ({ isModalVisible, user, profile, toggleModal, addToChatList }) => {
+export default ({ isModalVisible, user, profile, toggleModal, startChat }) => {
     return (
         <Modal
             isVisible={isModalVisible}
-            animationIn="slideInLeft"
-            animationOut="slideOutRight"
         >
             <View style={styles.modal}>
                 <View>
@@ -34,10 +32,10 @@ export default ({ isModalVisible, user, profile, toggleModal, addToChatList }) =
                     }
                 </View>
                 <View style={styles.modalButton}>
-                    {addToChatList &&
+                    {startChat &&
                         <Button
                             title={"Chat !"}
-                            onPress={addToChatList}
+                            onPress={startChat}
                         />
                     }
                 </View>

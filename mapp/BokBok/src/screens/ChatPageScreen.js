@@ -6,8 +6,9 @@ import { connect } from 'react-redux';
 import { Socket, Presence } from "phoenix";
 import UserViewModal from '../components/userViewModal';
 
-const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation, socket } } }) => {
+const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation } } }) => {
 
+  const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [channel, setChannel] = useState(null);
   const [online, setOnline] = useState(false);
@@ -32,7 +33,12 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
   }
 
   const fetchMessageList = () => {
-    let channel = socket.channel(`conversation:${conversation.id}`, {});
+    console.log("COVERSATION ID", conversation.id)
+    let socket_instance = new Socket("ws://bdf056bb1a03.ngrok.io/socket", { params: { token: token } });
+
+    socket_instance.connect()
+
+    let channel = socket_instance.channel(`conversation:${conversation.id}`, {});
     let presence = new Presence(channel);
 
     channel.join()
@@ -47,6 +53,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
     presence.onSync(() => updateOnline(presence));
 
+    setSocket(socket_instance);
     setChannel(channel);
   }
 
@@ -58,6 +65,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
     const removeBlurListener = navigation.addListener('blur', () => {
       channel && channel.leave();
+      socket && socket.disconnect();
     });
 
     return () => {
@@ -102,7 +110,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
         user={{ username: conversation.name }}
         profile={conversation.profile}
         toggleModal={() => toggleModal(false)}
-        addToChatList={null}
+        startChat={null}
       />
 
       <View style={{ flex: 0.1 }}>

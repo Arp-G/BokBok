@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
-import { ListItem, Text, SearchBar } from 'react-native-elements';
+import { ListItem, SearchBar } from 'react-native-elements';
 import { load_conversations, update_conversation } from '../actions/chat';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -15,11 +15,9 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
     const fetchConversationsList = () => {
 
-        let socket_instance = socket || new Socket("ws://ff6c6c88fc53.ngrok.io/socket", { params: { token: token } });
+        let socket_instance = new Socket("ws://bdf056bb1a03.ngrok.io/socket", { params: { token: token } });
 
-        socket_instance.connect()
-
-        console.log("SOCKET CONNECTED !")
+        socket_instance.connect();
 
         let channel = socket_instance.channel(`user:${id}`, {});
 
@@ -53,6 +51,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
         const removeBlurListener = navigation.addListener('blur', () => {
             channel && channel.leave();
+            socket && socket.disconnect();
         });
 
         return () => {
@@ -75,7 +74,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
             }}
             badge={conversation.unseen_message_count > 0 ? { status: "success", value: conversation.unseen_message_count } : null}
             onPress={() => {
-                navigation.navigate('ChatFlow', { screen: 'ChatPage', params: { conversation, socket } });
+                navigation.navigate('ChatFlow', { screen: 'ChatPage', params: { conversation } });
             }}
             bottomDivider
             chevron

@@ -19,14 +19,17 @@ const SearchPageScreen = ({ navigation }) => {
     }
   }
 
-  const addConversation = async (receiver_id) => {
+  const startChat = async (receiver) => {
     try {
-      await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver_id } });
-      ToastAndroid.show("User added to chat List !", ToastAndroid.SHORT);
+      const response = await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver.id } });
+      const conversation = { ...receiver, id: response.data.conversation_id }
+      setSelectedUser(null);
+      navigation.navigate('ChatFlow', { screen: 'ChatPage', params: { conversation } })
     } catch (err) {
       console.log("ERROR !", err);
     }
   }
+
 
   useEffect(() => {
     const removeFocusListener = navigation.addListener('focus', () => {
@@ -67,7 +70,7 @@ const SearchPageScreen = ({ navigation }) => {
             user={selectedUser}
             profile={selectedUser.user_profile}
             toggleModal={setSelectedUser}
-            addToChatList={() => addConversation(selectedUser.id)}
+            startChat={() => startChat(selectedUser)}
           />
         </>
         : null

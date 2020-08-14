@@ -10,6 +10,7 @@ defmodule BokBokWeb.ConversationController do
     render(conn, "conversations.json", conversations: conversations)
   end
 
+  @spec create_conversation(%{assigns: %{current_user: atom | %{id: any}}}, map) :: any
   def create_conversation(%{assigns: %{current_user: user}} = conn, %{
         "receiver_id" => receiver_id
       }) do

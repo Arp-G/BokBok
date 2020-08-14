@@ -14,11 +14,8 @@ const ContactsPageScreen = ({ navigation }) => {
     var Spinner = require('react-native-spinkit');
 
     const fireContactSearch = async () => {
-        console.log("Searching with", userContacts)
         try {
-            const resp = await bokbokApi.get('/search_contacts', {
-                params: { phone_nos: userContacts.map(contact => contact.phone_number) }
-            });
+            const resp = await bokbokApi.post('/search_contacts', { phone_nos: userContacts.map(contact => contact.phone_number) });
             setSearchResult(resp.data.data);
         } catch (err) {
             console.log("ERROR !", err)
@@ -27,10 +24,12 @@ const ContactsPageScreen = ({ navigation }) => {
         setLoading(false);
     }
 
-    const addConversation = async (receiver_id) => {
+    const startChat = async (receiver) => {
         try {
-            await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver_id } });
-            ToastAndroid.show("User added to chat List !", ToastAndroid.SHORT);
+            const response = await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver.id } });
+            const conversation = { ...receiver, id: response.data.conversation_id }
+            setSelectedUser(null);
+            navigation.navigate('ChatFlow', { screen: 'ChatPage', params: { conversation } })
         } catch (err) {
             console.log("ERROR !", err);
         }
@@ -77,6 +76,7 @@ const ContactsPageScreen = ({ navigation }) => {
         const removeFocusListener = navigation.addListener('focus', () => {
             setLoading(true);
             requestContactPermission();
+            fireContactSearch();
         });
 
         return () => {
@@ -86,9 +86,9 @@ const ContactsPageScreen = ({ navigation }) => {
 
     // Fire the contacts search after the "userContacts" state is set
     // By adding it as a dependency to "useEffect" we ensure that it is called whenever "userContacts" changes
-    useEffect(() => {
-        fireContactSearch()
-    }, [userContacts]);
+    // useEffect(() => {
+    //     fireContactSearch()
+    // });
 
 
     renderItem = ({ item: user }) => {
@@ -139,7 +139,7 @@ const ContactsPageScreen = ({ navigation }) => {
                         user={selectedUser}
                         profile={selectedUser.user_profile}
                         toggleModal={setSelectedUser}
-                        addToChatList={() => addConversation(selectedUser.id)}
+                        startChat={() => startChat(selectedUser)}
                     />
                 </>
                 : null

@@ -34,7 +34,7 @@ defmodule BokBokWeb.Router do
     get "/get_conversation", ConversationController, :create_conversation
     get "/conversations", ConversationController, :user_conversations
     get "/search", SearchController, :search
-    get "/search_contacts", SearchController, :search_contacts
+    post "/search_contacts", SearchController, :search_contacts
     get "/get_random", SearchController, :random_users
   end
 
