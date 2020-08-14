@@ -3,13 +3,10 @@ import { StyleSheet, View, FlatList, TextInput, TouchableOpacity } from 'react-n
 import { Avatar, ListItem, Text, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
-import { Socket, Presence } from "phoenix";
+import { Presence } from "phoenix";
 import UserViewModal from '../components/userViewModal';
-import { setSocketRef , getSocket } from '../socketRef';
-
-const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation } } }) => {
-
-  let socket =  getSocket();
+import { set_socket } from '../actions/chat';
+const ChatPageScreen = ({ navigation, id, socket, route: { params: { conversation } } }) => {
 
   const [messages, setMessages] = useState([]);
   const [channel, setChannel] = useState(null);
@@ -36,30 +33,27 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
   const fetchMessageList = () => {
     try {
-    let channel = socket.channel(`conversation:${conversation.id}`, {});
-    let presence = new Presence(channel);
+      let channel = socket.channel(`conversation:${conversation.id}`, {});
+      let presence = new Presence(channel);
 
-    
-    channel.join()
-      .receive("ok", resp => {
-        setMessages(resp.messages);
-      })
-      .receive("error", resp => { console.log("Unable to join", resp) });
+      channel.join()
+        .receive("ok", resp => {
+          setMessages(resp.messages);
+        })
+        .receive("error", resp => { console.log("Unable to join", resp) });
 
-    
+      channel.on("new:msg", payload => {
+        updateMessageList(payload);
+      });
 
-    channel.on("new:msg", payload => {
-      updateMessageList(payload);
-    });
+      presence.onSync(() => updateOnline(presence));
 
-    presence.onSync(() => updateOnline(presence));
+      setChannel(channel);
+      set_socket(socket);
 
-    setChannel(channel);
-    setSocketRef(socket);
-
-  }catch(e){
-    console.log(JSON.stringify(e))
-  }
+    } catch (e) {
+      console.log(JSON.stringify(e))
+    }
   }
 
   useEffect(() => {
@@ -173,6 +167,6 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
 const styles = StyleSheet.create({});
 
-const mapStateToProps = ({ auth: { token: token, id: id }, chat: { conversations: conversations } }) => ({ token, id, conversations });
+const mapStateToProps = ({ auth: { token: token, id: id }, chat: { socket: socket, conversations: conversations } }) => ({ socket, token, id, conversations });
 
 export default connect(mapStateToProps, null)(ChatPageScreen);

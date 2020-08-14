@@ -37,7 +37,6 @@ const SigninScreen = ({ signin, navigation }) => {
     try {
       setLoading(true);
       const response = await bokbokApi.post('/sign_in', { username, password });
-      console.log(`${response.data.id}`);
       await AsyncStorage.setItem('token', response.data.token);
       await AsyncStorage.setItem('id', `${response.data.id}`);
       signin(response.data.token, response.data.id);

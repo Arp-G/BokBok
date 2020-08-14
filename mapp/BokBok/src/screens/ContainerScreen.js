@@ -16,14 +16,16 @@ import EditProfileScreen from './EditProfileScreen';
 import EditPasswordScreen from './EditPasswordScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { restore_token, signout } from '../actions/auth';
+import { set_socket } from '../actions/chat';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { ImageBackground } from 'react-native';
 import { Icon } from 'react-native-elements';
 import messaging from '@react-native-firebase/messaging';
 import database from '@react-native-firebase/database';
+import { Socket } from "phoenix";
 
-const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
+const ContainerScreen = ({ socket, token, id, isLoading, set_socket, restore_token, signout }) => {
 
     async function saveTokenToDatabase(fcm_token) {
 
@@ -156,8 +158,16 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
         </Tab.Navigator>
     );
 
-    if (isLoading) {
-        return <SplashScreen />;
+    if (isLoading) return (<SplashScreen />);
+
+
+
+    // Create and connect socket instance if socket not present already
+    if (token && !socket) {
+        let socket = new Socket("ws://bdf056bb1a03.ngrok.io/socket", { params: { token: token } });
+
+        socket.connect();
+        set_socket(socket);
     }
 
     return (
@@ -177,8 +187,8 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
     );
 }
 
-const mapStateToProps = ({ auth: { token: token, id: id, isLoading: isLoading } }) => ({ token, id, isLoading });
+const mapStateToProps = ({ auth: { token: token, id: id, isLoading: isLoading }, chat: { socket: socket } }) => ({ socket, token, id, isLoading });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ restore_token, signout }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ restore_token, signout, set_socket }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContainerScreen);

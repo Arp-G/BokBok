@@ -1,11 +1,19 @@
-import { LOAD_CONVERSATION_LIST, UPDATE_CONVERSATION_LIST } from '../constants/actionTypes';
+import { SET_SOCKET, LOAD_CONVERSATION_LIST, UPDATE_CONVERSATION_LIST } from '../constants/actionTypes';
 const initialState = {
+    socket: null,
     loadingConversaions: false,
     conversations: []
 };
 const chatReducer = (state = initialState, action) => {
 
+    console.log("REDUCER CALLED WITH ACTION", action)
+
     switch (action.type) {
+        case SET_SOCKET:
+            return {
+                ...state,
+                socket: action.payload.socket
+            }
         case LOAD_CONVERSATION_LIST:
             return {
                 ...state,

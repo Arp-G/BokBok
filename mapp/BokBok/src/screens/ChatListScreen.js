@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
-import { ListItem, Text, SearchBar } from 'react-native-elements';
-import { load_conversations, update_conversation } from '../actions/chat';
+import { View, FlatList } from 'react-native';
+import { ListItem, SearchBar } from 'react-native-elements';
+import { set_socket, load_conversations, update_conversation } from '../actions/chat';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Socket } from "phoenix";
-import { setSocketRef , getSocket } from '../socketRef';
 
-const ChatListScreen = ({ navigation, token, id, conversations, load_conversations, update_conversation }) => {
+const ChatListScreen = ({ navigation, id, socket, conversations, set_socket, load_conversations, update_conversation }) => {
 
-    const [socket, setSocket] = useState(null);
     const [search, updateSearch] = useState('');
     const [channel, setChannel] = useState(null);
 
     const fetchConversationsList = () => {
 
-        let socket_instance = getSocket() || new Socket("ws://0180099def8f.ngrok.io/socket", { params: { token: token } });
-
-        socket_instance.connect()
-
-        console.log("SOCKET CONNECTED !")
-
-        let channel = socket_instance.channel(`user:${id}`, {});
+        let channel = socket.channel(`user:${id}`, {});
 
         channel.join()
             .receive("ok", resp => {
@@ -40,8 +31,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
             update_conversation(payload)
         });
 
-        setSocket(socket_instance);
-        setSocketRef(socket_instance);
+        set_socket(socket);
         setChannel(channel);
     }
 
@@ -75,9 +65,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
             }}
             badge={conversation.unseen_message_count > 0 ? { status: "success", value: conversation.unseen_message_count } : null}
-            onPress={() => {
-                navigation.navigate('ChatFlow', { screen: 'ChatPage', params: { conversation, socket } });
-            }}
+            onPress={() => navigation.navigate('ChatFlow', { screen: 'ChatPage', params: { conversation } })}
             bottomDivider
             chevron
         />);
@@ -104,18 +92,15 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
             />
         </View>
     )
-
-
 }
 
-const styles = StyleSheet.create({});
+const mapStateToProps = ({ auth: { id: id }, chat: { socket: socket, conversations: conversations } }) => ({ id, socket, conversations });
 
-const mapStateToProps = ({ auth: { token: token, id: id }, chat: { conversations: conversations } }) => ({ token, id, conversations });
-
-const mapDispatchToProps = dispatch => bindActionCreators({ load_conversations, update_conversation }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ set_socket, load_conversations, update_conversation }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatListScreen);
 
+  // Return Format:
   // {
   //   "created_by": 1,
   //   "id": 6,
