@@ -18,7 +18,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
     const fetchConversationsList = () => {
 
-        let socket_instance = new Socket("ws://7a30efdd6c55.ngrok.io/socket", { params: { token: token } });
+        let socket_instance = new Socket("ws://73d90d83527c.ngrok.io/socket", { params: { token: token } });
 
         socket_instance.connect();
 
@@ -80,7 +80,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
             }}
             badge={conversation.unseen_message_count > 0 ? { status: "success", value: conversation.unseen_message_count } : null}
             onPress={() => {
-                navigation.navigate('ChatFlow', { screen: 'ChatPage', params: { conversation } });
+                navigation.navigate('Chat', { screen: 'ChatPage', params: { conversation } });
             }}
             bottomDivider
             chevron
@@ -100,7 +100,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
     }
 
 
-    // ChatFlow, ChatPage
+    // Chat, ChatPage
     return (
         <View>
             <SearchBar

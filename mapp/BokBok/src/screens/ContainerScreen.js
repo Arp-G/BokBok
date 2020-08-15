@@ -148,27 +148,49 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
         </AccountsDrawer.Navigator>
     );
 
-    //     {name: "ChatFlow", key: "ChatFlow-Z4lS4xuINQjQlJSBzxRrc", params: {…}, state: {…}}
-    // key: "ChatFlow-Z4lS4xuINQjQlJSBzxRrc"
-    // name: "ChatFlow"
-    // params:
-    // params: {conversation: {…}}
-    // screen: "ChatPage"
 
-    const Main = () => (
-        <Tab.Navigator>
-            <Tab.Screen name='ChatFlow'
-                component={ChatStackComponent}
-                options={({ navigation, route }) => ({ tabBarVisible: false })}
-            />
-            <Tab.Screen name='ExploreFlow' component={ExploreTabComponent} />
-            <Tab.Screen name='AccountsFlow' component={AccountsDrawerComponent} />
-        </Tab.Navigator>
-    );
+    const Main = () => {
+
+
+        return (
+            <Tab.Navigator
+                tabBarOptions={{
+                    showIcon: true,
+                    style: { backgroundColor: '#ffe6d0' },
+                    activeTintColor: 'green',
+                    inactiveTintColor: 'black',
+                    // style: { display: 'none' }
+                }}
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        let iconName;
+
+                        if (route.name === 'Chat') {
+                            iconName = 'comments';
+                        } else if (route.name === 'Explore') {
+                            iconName = 'users';
+                        }
+                        else {
+                            iconName = 'cog';
+                        }
+
+                        return <Icon name={iconName} type='font-awesome' color={color} size={size} />;
+                    },
+                })}
+            >
+                <Tab.Screen name='Chat'
+                    component={ChatStackComponent}
+                />
+                <Tab.Screen name='Explore' component={ExploreTabComponent} />
+                <Tab.Screen name='Accounts' component={AccountsDrawerComponent} />
+            </Tab.Navigator >
+        )
+    };
 
     if (isLoading) {
         return <SplashScreen />;
     }
+
 
     return (
         <>

@@ -41,7 +41,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
     setLoading(true);
 
-    let socket_instance = new Socket("ws://7a30efdd6c55.ngrok.io/socket", { params: { token: token } });
+    let socket_instance = new Socket("ws://73d90d83527c.ngrok.io/socket", { params: { token: token } });
 
     socket_instance.connect()
 
@@ -153,23 +153,23 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
             renderItem={renderItem}
             keyExtractor={item => item.id.toString()}
           />
-            : <EmptyResult text={`You don't have any conversations with ${ conversation.profile && conversation.profile.name != '' ? conversation.profile.name : conversation.username}`} />
+            : <EmptyResult text={`You don't have any conversations with ${conversation.profile && conversation.profile.name != '' ? conversation.profile.name : conversation.username}`} />
         }
       </View>
 
-    <View style={{ flexDirection: 'row', flex: 0.05, minHeight: 20, marginBottom: 5 }} >
-      <View style={{ flex: 9, borderColor: '#000080', borderWidth: 2, borderRadius: 20, marginLeft: 5, marginRight: 5, height: '100%' }}>
-        <TextInput
-          placeholder={'Type your message here...'}
-          onChangeText={setChat}
-          value={chat}
-          style={{ flex: 9 }}
-        />
+      <View style={{ flexDirection: 'row', flex: 0.05, minHeight: 20, marginBottom: 5 }} >
+        <View style={{ flex: 9, borderColor: '#000080', borderWidth: 2, borderRadius: 20, marginLeft: 5, marginRight: 5, height: '100%' }}>
+          <TextInput
+            placeholder={'Type your message here...'}
+            onChangeText={setChat}
+            value={chat}
+            style={{ flex: 9 }}
+          />
+        </View>
+        <TouchableOpacity style={{ flex: 1 }} onPress={sendMessage}>
+          <Icon name="paper-plane" size={30} color="blue" />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={{ flex: 1 }} onPress={sendMessage}>
-        <Icon name="paper-plane" size={30} color="blue" />
-      </TouchableOpacity>
-    </View>
     </View >
   );
 };

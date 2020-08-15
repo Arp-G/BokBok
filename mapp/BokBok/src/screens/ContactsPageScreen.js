@@ -29,7 +29,7 @@ const ContactsPageScreen = ({ navigation }) => {
             const response = await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver.id } });
             const conversation = { ...receiver, id: response.data.conversation_id }
             setSelectedUser(null);
-            navigation.navigate('ChatFlow', { screen: 'ChatPage', params: { conversation } })
+            navigation.navigate('Chat', { screen: 'ChatPage', params: { conversation } })
         } catch (err) {
             console.log("ERROR !", err);
         }

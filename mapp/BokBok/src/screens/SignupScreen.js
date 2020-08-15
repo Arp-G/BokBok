@@ -24,7 +24,7 @@ const SignupScreen = ({ signin, navigation }) => {
       await AsyncStorage.setItem('token', response.data.token);
       await AsyncStorage.setItem('id', `${response.data.id}`);
       signin(response.data.token, response.data.id);
-      navigation.navigate('Main', { screen: 'AccountsFlow' });
+      navigation.navigate('Main', { screen: 'Accounts' });
     } catch (err) {
       setError(err.response.data.errors);
       setLoading(false);
