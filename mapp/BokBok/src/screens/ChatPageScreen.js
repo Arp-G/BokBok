@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, TextInput, TouchableOpacity, ImageBackgroundImageBackground } from 'react-native';
+import { StyleSheet, View, FlatList, TextInput, TouchableOpacity, Animated } from 'react-native';
 import { Avatar, Badge, Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { Socket, Presence } from "phoenix";
 import UserViewModal from '../components/userViewModal';
 import moment from 'moment';
+import EmptyResult from '../components/emptyResult';
 
 var Spinner = require('react-native-spinkit');
 
@@ -40,7 +41,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
     setLoading(true);
 
-    let socket_instance = new Socket("ws://bdf056bb1a03.ngrok.io/socket", { params: { token: token } });
+    let socket_instance = new Socket("ws://7a30efdd6c55.ngrok.io/socket", { params: { token: token } });
 
     socket_instance.connect()
 
@@ -125,8 +126,8 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
         startChat={null}
       />
 
-      <View style={{ flex: 0.1 }}>
-        <TouchableOpacity style={{ flex: 1, alignSelf: 'center', flexDirection: 'row' }} onPress={() => toggleModal(true)}>
+      <View style={{ flex: 0.13 }}>
+        <TouchableOpacity style={styles.header} onPress={() => toggleModal(true)}>
           <Avatar
             size="medium"
             rounded
@@ -135,45 +136,61 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
             overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
             source={conversation.profile && conversation.profile.avatar ? { uri: conversation.profile.avatar.thumbnail } : null}
           />
-          <View>
+          <View style={styles.headerText}>
             <Text style={{ padding: 5, textAlignVertical: 'center' }}>
               {(conversation.profile && conversation.profile.name) || conversation.name}
             </Text>
-            {online ? <Text><Badge status="success" />Online</Text> : <Text><Badge status="error" />Offline</Text>}
+            {online ? <Text><Badge status="success" style={styles.badge} /> Online</Text> : <Text><Badge status="error" style={styles.badge} /> Offline</Text>}
           </View>
-
-
         </TouchableOpacity>
       </View>
 
       <View style={{ flex: 0.85 }}>
-        <FlatList
-          inverted
-          data={messages}
-          renderItem={renderItem}
-          keyExtractor={item => item.id.toString()}
+        {
+          messages.length > 0 ? <FlatList
+            inverted
+            data={messages}
+            renderItem={renderItem}
+            keyExtractor={item => item.id.toString()}
+          />
+            : <EmptyResult text={`You don't have any conversations with ${ conversation.profile && conversation.profile.name != '' ? conversation.profile.name : conversation.username}`} />
+        }
+      </View>
+
+    <View style={{ flexDirection: 'row', flex: 0.05, minHeight: 20, marginBottom: 5 }} >
+      <View style={{ flex: 9, borderColor: '#000080', borderWidth: 2, borderRadius: 20, marginLeft: 5, marginRight: 5, height: '100%' }}>
+        <TextInput
+          placeholder={'Type your message here...'}
+          onChangeText={setChat}
+          value={chat}
+          style={{ flex: 9 }}
         />
       </View>
-
-      <View style={{ flexDirection: 'row', flex: 0.05, minHeight: 20, marginBottom: 5 }} >
-        <View style={{ flex: 9, borderColor: '#000080', borderWidth: 2, borderRadius: 20, marginLeft: 5, marginRight: 5, height: '100%' }}>
-          <TextInput
-            placeholder={'Type your message here...'}
-            onChangeText={setChat}
-            value={chat}
-            style={{ flex: 9 }}
-          />
-        </View>
-        <TouchableOpacity style={{ flex: 1 }} onPress={sendMessage}>
-          <Icon name="paper-plane" size={30} color="blue" />
-        </TouchableOpacity>
-
-      </View>
+      <TouchableOpacity style={{ flex: 1 }} onPress={sendMessage}>
+        <Icon name="paper-plane" size={30} color="blue" />
+      </TouchableOpacity>
     </View>
+    </View >
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  header: {
+    flex: 1,
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    backgroundColor: 'grey',
+    minHeight: 80,
+    width: '100%',
+    paddingTop: 10
+  },
+  headerText: {
+    marginLeft: 10
+  },
+  badge: {
+    margin: 10
+  }
+});
 
 const mapStateToProps = ({ auth: { token: token, id: id }, chat: { conversations: conversations } }) => ({ token, id, conversations });
 

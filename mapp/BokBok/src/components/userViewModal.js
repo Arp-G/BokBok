@@ -23,8 +23,8 @@ export default ({ isModalVisible, user, profile, toggleModal, startChat }) => {
                     {profile && profile.dob != '' ? <Text style={styles.modalItem}>{`DOB: ${profile.dob}`}</Text> : null}
                     {profile && profile.bio != ''
                         ? (
-                            <View style={{ margingBottom: 60 }}>
-                                <Text style={styles.modalItem}>{`Bio: ${profile.bio}`}</Text>
+                            <View style={{ alignSelf: 'flex-start', margingBottom: 60, marginLeft: 10, maxWidth: 200 }}>
+                                <Text style={{ fontSize: 17 }}>{`Bio: ${profile.bio}`}</Text>
                             </View>
                         )
                         : null
@@ -42,7 +42,6 @@ export default ({ isModalVisible, user, profile, toggleModal, startChat }) => {
                     <Button
                         title="Close"
                         onPress={() => toggleModal(false)}
-                        containertyle={styles.modalButton}
                         raised
                     />
                 </View>

@@ -161,7 +161,7 @@ const EditProfileScreen = () => {
                     icon={{ name: 'user', type: 'font-awesome' }}
                     showEditButton
                     overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
-                    source={avatar || require('../assets/images/avatar-placeholder.png')}
+                    source={avatar || null}
                 />
 
                 <Input label="Name"

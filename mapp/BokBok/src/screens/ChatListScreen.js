@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
-import { ListItem, SearchBar } from 'react-native-elements';
+import { Text, ListItem, SearchBar } from 'react-native-elements';
 import { load_conversations, update_conversation } from '../actions/chat';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Socket } from "phoenix";
+import EmptyResult from '../components/emptyResult';
 
+var Spinner = require('react-native-spinkit');
 
 const ChatListScreen = ({ navigation, token, id, conversations, load_conversations, update_conversation }) => {
 
     const [socket, setSocket] = useState(null);
     const [search, updateSearch] = useState('');
     const [channel, setChannel] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const fetchConversationsList = () => {
 
-        let socket_instance = new Socket("ws://bdf056bb1a03.ngrok.io/socket", { params: { token: token } });
+        let socket_instance = new Socket("ws://7a30efdd6c55.ngrok.io/socket", { params: { token: token } });
 
         socket_instance.connect();
 
@@ -29,7 +32,8 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
         channel.push("fetch_conversaions")
             .receive("ok", payload => {
-                load_conversations(payload.conversations)
+                load_conversations(payload.conversations);
+                setLoading(false);
             }
             )
             .receive("error", err => console.log("phoenix errored", err));
@@ -62,6 +66,8 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
     renderItem = ({ item: conversation }) => {
 
+        (conversation.profile && conversation.profile.avatar) && console.log({ uri: conversation.profile.avatar.thumbnail })
+
         return (<ListItem
             title={conversation.name}
             subtitle={conversation.last_message}
@@ -81,6 +87,18 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
         />);
     };
 
+    if (loading) {
+        return (
+            <View style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <Text style={{ paddingBottom: 20 }}> Loading conversations...</Text>
+                <Spinner isVisible={true} size={20} type={'Pulse'} color='red' size={50} />
+            </View>);
+    }
+
 
     // ChatFlow, ChatPage
     return (
@@ -91,15 +109,19 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
                 value={search}
                 clearIcon
             />
-            <FlatList
-                keyExtractor={(conversation) => conversation.id.toString()}
-                data={conversations.filter(conversation => {
-                    let searchString = search.toLowerCase()
-                    return conversation.name.toLowerCase().includes(searchString)
-                        || (conversation.profile && conversation.profile.name.toLowerCase().includes(searchString))
-                })}
-                renderItem={renderItem}
-            />
+            {conversations.length > 0
+                ? <FlatList
+                    keyExtractor={(conversation) => conversation.id.toString()}
+                    data={conversations.filter(conversation => {
+                        let searchString = search.toLowerCase()
+                        return conversation.name.toLowerCase().includes(searchString)
+                            || (conversation.profile && conversation.profile.name.toLowerCase().includes(searchString))
+                    })}
+                    renderItem={renderItem}
+                />
+                : <EmptyResult text={"You dont have any conversations, find some new people to chat with in the explore section.."} />
+            }
+
         </View>
     )
 
@@ -113,24 +135,3 @@ const mapStateToProps = ({ auth: { token: token, id: id }, chat: { conversations
 const mapDispatchToProps = dispatch => bindActionCreators({ load_conversations, update_conversation }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatListScreen);
-
-  // {
-  //   "created_by": 1,
-  //   "id": 6,
-  //   "inserted_at": "2020-08-01T07:01:43Z",
-  //   "last_message": null,
-  //   "last_sender": null,
-  //   "name": "arp",
-  //   "profile": {
-  //     "avatar": {
-  //       "original": "https://s3.ap-south-1.amazonaws.com/bokbok/uploads/bokbok/user_profiles/avatars/000/000/000/001/6c2ce730827ac229a2c2887ff8c11aaec689c83a.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQLZXPQNO7XIKB4N7%2F20200801%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20200801T071648Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=c13fd98da23aa1b652b34b5c66710156fbc86cc5683b7d3a8b5dcf32d186dee8",
-  //       "thumbnail": "https://s3.ap-south-1.amazonaws.com/bokbok/uploads/bokbok/user_profiles/avatars/000/000/000/001/a5d56d67efce784900b288361bac27b09e3a7d2b.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQLZXPQNO7XIKB4N7%2F20200801%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20200801T071648Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=b4600a016f8b75103a9cf22f378266284fedbd2980de3c9daeeb63711517155a"
-  //     },
-  //     "bio": "Learning react native development",
-  //     "dob": "1997-09-18",
-  //     "name": "Arpan Dev",
-  //     "user_id": 1
-  //   },
-  //   "type": "private",
-  //   "unseen_message_count": 0
-  // }

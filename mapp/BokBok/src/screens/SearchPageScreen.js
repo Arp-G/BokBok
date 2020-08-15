@@ -3,6 +3,7 @@ import { StyleSheet, View, FlatList, Button } from 'react-native';
 import { ListItem, Text, SearchBar } from 'react-native-elements';
 import bokbokApi from '../api/bokbok';
 import UserViewModal from '../components/userViewModal';
+import EmptyResult from '../components/emptyResult';
 
 const SearchPageScreen = ({ navigation }) => {
 
@@ -22,7 +23,7 @@ const SearchPageScreen = ({ navigation }) => {
   const startChat = async (receiver) => {
     try {
       const response = await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver.id } });
-      const conversation = { ...receiver, id: response.data.conversation_id }
+      const conversation = { ...receiver, id: response.data.conversation_id, name: receiver.username, profile: receiver.user_profile };
       setSelectedUser(null);
       navigation.navigate('ChatFlow', { screen: 'ChatPage', params: { conversation } })
     } catch (err) {
@@ -54,6 +55,7 @@ const SearchPageScreen = ({ navigation }) => {
 
         }}
         onPress={() => {
+          console.log("SELECTED USER", search)
           setSelectedUser(search);
         }}
         bottomDivider
@@ -62,7 +64,7 @@ const SearchPageScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <View style={{ backgroundColor: '#94C0CF' }}>
       {selectedUser
         ? <>
           <UserViewModal
@@ -81,12 +83,25 @@ const SearchPageScreen = ({ navigation }) => {
         value={search}
         clearIcon
       />
-      <Button title="search" onPress={fireSearch} />
-      <FlatList
-        keyExtractor={(search) => search.id.toString()}
-        data={result}
-        renderItem={renderItem}
-      />
+      <View style={{ marginTop: 10, marginBottom: 10, width: '50%', alignSelf: 'center' }}>
+        <Button
+          backgroundColor={'red'}
+          buttonStyle={{ backgroundColor: 'green' }}
+          title="search"
+          onPress={fireSearch}
+          raised />
+      </View>
+      {
+
+        result.length > 0
+          ? <FlatList
+            keyExtractor={(search) => search.id.toString()}
+            data={result}
+            renderItem={renderItem}
+          />
+          : <EmptyResult text={"Search for people..."} />
+      }
+
     </View>
   )
 }
