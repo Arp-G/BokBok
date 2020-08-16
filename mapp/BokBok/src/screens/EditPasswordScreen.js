@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ImageBackground } from 'react-native';
+import { View, ImageBackground, ToastAndroid } from 'react-native';
 import bokbokApi from '../api/bokbok';
 import { Text, Button, Input } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
@@ -20,7 +20,11 @@ const EditPasswordScreen = () => {
             setError({});
         } catch (err) {
             setError(err.response.data);
-            console.log("ERROR !")
+            ToastAndroid.showWithGravity(
+                "Failed to update password !",
+                ToastAndroid.SHORT,
+                ToastAndroid.BOTTOM
+            );
         }
         setSaving(false);
     }

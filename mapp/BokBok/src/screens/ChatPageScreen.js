@@ -41,7 +41,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
     setLoading(true);
 
-    let socket_instance = new Socket("ws://6103af11b2a0.ngrok.io/socket", { params: { token: token } });
+    let socket_instance = new Socket("ws://a221bb8e6bed.ngrok.io/socket", { params: { token: token } });
 
     socket_instance.connect()
 
@@ -53,7 +53,13 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
         setMessages(resp.messages);
         setLoading(false);
       })
-      .receive("error", resp => { console.log("Unable to join", resp) });
+      .receive("error", resp => {
+        ToastAndroid.showWithGravity(
+          "Error, Unable to join cahnnel !",
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM
+        );
+      });
 
     channel.on("new:msg", payload => {
       updateMessageList(payload);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, ImageBackground } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, ImageBackground, ToastAndroid } from 'react-native';
 import bokbokApi from '../api/bokbok';
 import { Text, Button, Input, Avatar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
@@ -40,10 +40,14 @@ const EditProfileScreen = () => {
 
             setName(name);
             setBio(bio);
-            setDob(new Date(dob));
+            setDob(new Date(dob)); // NOT WORKING, incorrect DOB string
             setAvatar(avatar ? { uri: avatar.original } : null);
         } catch (err) {
-            console.log("ERROR !")
+            ToastAndroid.showWithGravity(
+                "User profile does not exists !",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM
+            );
         }
         setLoading(false);
     }
@@ -55,7 +59,7 @@ const EditProfileScreen = () => {
         var data = new FormData();
         data.append('name', name);
         data.append('bio', bio);
-        data.append('dob', dob);
+        data.append('dob', dob.toISOString().slice(0, 10));
         var config = {}
 
         if (avatarData || avatarData == '') {
@@ -72,7 +76,6 @@ const EditProfileScreen = () => {
 
         try {
             setSaving(true);
-
             await bokbokApi.post('/user_profile', data, config);
 
         } catch (err) {
@@ -117,9 +120,17 @@ const EditProfileScreen = () => {
         ImagePicker.showImagePicker(options, (response) => {
 
             if (response.didCancel) {
-                console.log('User cancelled image picker');
+                ToastAndroid.showWithGravity(
+                    "Image Picker Cancelled !",
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM
+                );
             } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
+                ToastAndroid.showWithGravity(
+                    "Image Picker Error !",
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM
+                );
             } else if (response.customButton) {
                 setAvatar(null);
                 setAvatarData('');
@@ -143,7 +154,7 @@ const EditProfileScreen = () => {
 
 
         );
-    } 
+    }
 
     return (
         <ImageBackground source={require('../assets/images/background1.jpg')} style={{ width: '100%', height: '100%' }}>

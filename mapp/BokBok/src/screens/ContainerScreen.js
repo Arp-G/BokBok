@@ -18,7 +18,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { restore_token, signout } from '../actions/auth';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { ImageBackground } from 'react-native';
+import { ImageBackground, ToastAndroid } from 'react-native';
 import { Icon } from 'react-native-elements';
 import messaging from '@react-native-firebase/messaging';
 import database from '@react-native-firebase/database';
@@ -36,7 +36,11 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
                 })
         }
         catch (e) {
-            console.log(e);
+            ToastAndroid.showWithGravity(
+                "Error, saving device token !",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM
+            );
         }
     }
 
@@ -68,7 +72,11 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
             token = await AsyncStorage.getItem('token');
             id = await AsyncStorage.getItem('id');
         } catch (e) {
-            console.log("Failed !");
+            ToastAndroid.showWithGravity(
+                "Failed to fetch auth token !",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM
+            );
         }
         restore_token(token, id);
     }

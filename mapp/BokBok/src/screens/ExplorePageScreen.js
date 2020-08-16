@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, View, RefreshControl, SafeAreaView } from 'react-native';
+import { StyleSheet, View, RefreshControl, SafeAreaView, ToastAndroid } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-elements';
 import bokbokApi from '../api/bokbok';
 import Carousel from 'react-native-snap-carousel';
@@ -19,7 +19,11 @@ const ExplorePageScreen = ({ navigation }) => {
       const conversation = { ...receiver, id: response.data.conversation_id, name: receiver.username, profile: receiver.user_profile };
       navigation.navigate('Chat', { screen: 'ChatPage', params: { conversation } })
     } catch (err) {
-      console.log("ERROR !", err);
+      ToastAndroid.showWithGravity(
+        "Failed to fetch conversation ID !",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM
+      )
     }
   }
 

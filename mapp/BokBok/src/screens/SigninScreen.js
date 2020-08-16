@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, ImageBackground } from 'react-native';
+import { StyleSheet, View, ImageBackground, ToastAndroid } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Text, Button, Input } from 'react-native-elements';
 import { bindActionCreators } from 'redux';
@@ -37,12 +37,15 @@ const SigninScreen = ({ signin, navigation }) => {
     try {
       setLoading(true);
       const response = await bokbokApi.post('/sign_in', { username, password });
-      console.log(`${response.data.id}`);
       await AsyncStorage.setItem('token', response.data.token);
       await AsyncStorage.setItem('id', `${response.data.id}`);
       signin(response.data.token, response.data.id);
     } catch (err) {
-      console.log(err);
+      ToastAndroid.showWithGravity(
+        "Signin Failed !",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM
+      )
       setLoading(false);
       setError('Wrong username or password !');
     }

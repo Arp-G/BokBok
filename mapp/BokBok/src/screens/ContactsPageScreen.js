@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, PermissionsAndroid } from 'react-native';
+import { StyleSheet, View, FlatList, PermissionsAndroid, ToastAndroid } from 'react-native';
 import Contacts from 'react-native-contacts';
 import { ListItem, Text, Image } from 'react-native-elements';
 import UserViewModal from '../components/userViewModal';
@@ -18,7 +18,11 @@ const ContactsPageScreen = ({ navigation }) => {
             const resp = await bokbokApi.post('/search_contacts', { phone_nos: userContacts.map(contact => contact.phone_number) });
             setSearchResult(resp.data.data);
         } catch (err) {
-            console.log("ERROR !", err)
+            ToastAndroid.showWithGravity(
+                "Error, failed to search contacts !",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM
+            );
         }
 
         setLoading(false);
@@ -31,7 +35,11 @@ const ContactsPageScreen = ({ navigation }) => {
             setSelectedUser(null);
             navigation.navigate('Chat', { screen: 'ChatPage', params: { conversation } })
         } catch (err) {
-            console.log("ERROR !", err);
+            ToastAndroid.showWithGravity(
+                "Error, failed to fetch conversation ID !",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM
+            );
         }
     }
 
@@ -52,7 +60,11 @@ const ContactsPageScreen = ({ navigation }) => {
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 Contacts.getAll((err, contacts) => {
                     if (err === 'denied') {
-                        // error
+                        ToastAndroid.showWithGravity(
+                            "Contact Permission Denied !",
+                            ToastAndroid.LONG,
+                            ToastAndroid.BOTTOM
+                        );
                     } else {
                         setContacts(
                             contacts.map(contact => (
@@ -65,7 +77,11 @@ const ContactsPageScreen = ({ navigation }) => {
                     }
                 })
             } else {
-                console.log("yi");
+                ToastAndroid.showWithGravity(
+                    "Contact Permission Denied !",
+                    ToastAndroid.LONG,
+                    ToastAndroid.BOTTOM
+                );
             }
         } catch (err) {
             console.warn(err);

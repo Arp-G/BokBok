@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, Button } from 'react-native';
-import { ListItem, Text, SearchBar } from 'react-native-elements';
+import { StyleSheet, View, FlatList, Button, ToastAndroid } from 'react-native';
+import { ListItem, SearchBar } from 'react-native-elements';
 import bokbokApi from '../api/bokbok';
 import UserViewModal from '../components/userViewModal';
 import EmptyResult from '../components/emptyResult';
@@ -16,7 +16,11 @@ const SearchPageScreen = ({ navigation }) => {
       const resp = await bokbokApi.get('/search', { params: { query: search } });
       setSearchResult(resp.data.data);
     } catch (err) {
-      console.log("ERROR !", err)
+      ToastAndroid.showWithGravity(
+        "Error, Search Failed !",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM
+      )
     }
   }
 
@@ -27,7 +31,11 @@ const SearchPageScreen = ({ navigation }) => {
       setSelectedUser(null);
       navigation.navigate('Chat', { screen: 'ChatPage', params: { conversation } })
     } catch (err) {
-      console.log("ERROR !", err);
+      ToastAndroid.showWithGravity(
+        "Error, Failed to fetch Conversation ID !",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM
+      )
     }
   }
 
@@ -54,10 +62,7 @@ const SearchPageScreen = ({ navigation }) => {
               : require('../assets/images/avatar-placeholder.png')
 
         }}
-        onPress={() => {
-          console.log("SELECTED USER", search)
-          setSelectedUser(search);
-        }}
+        onPress={() => setSelectedUser(search)}
         bottomDivider
       />
     );
