@@ -13,7 +13,7 @@ defmodule BokBokWeb.SearchController do
       phone_nos
       |> Enum.reject(&is_nil/1)
       |> Enum.map(fn ph ->
-        ph |> String.replace(["(", ")", "-", " "], "")
+        ph |> String.replace(["(", ")", "-", " ", "+"], "")
       end)
 
     search_results = Search.find_contacts(phone_nos)

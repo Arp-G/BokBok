@@ -41,14 +41,14 @@ const EditPasswordScreen = () => {
                         onChangeText={setCurrentPassword}
                         autoCapitalize="none"
                         secureTextEntry
-                        leftIcon={{ type: 'font-awesome', name: 'phone-square', color: 'navy' }}
+                        leftIcon={{ type: 'font-awesome', name: 'unlock-alt', color: 'navy' }}
                         autoCorrect={false}
                         errorMessage={error.error} />
                     <Input label="Password"
                         onChangeText={setPassword}
                         autoCapitalize="none"
                         secureTextEntry
-                        leftIcon={{ type: 'font-awesome', name: 'phone-square', color: 'navy' }}
+                        leftIcon={{ type: 'font-awesome', name: 'unlock-alt', color: 'navy' }}
                         autoCorrect={false}
                         errorMessage={error.errors && error.errors["password"] ? error.errors["password"].join(", ") : ""} />
                     <Button

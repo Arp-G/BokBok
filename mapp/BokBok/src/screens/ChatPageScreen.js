@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, TextInput, TouchableOpacity, Animated } from 'react-native';
+import { StyleSheet, View, FlatList, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import { Avatar, Badge, Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
@@ -41,7 +41,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
     setLoading(true);
 
-    let socket_instance = new Socket("ws://73d90d83527c.ngrok.io/socket", { params: { token: token } });
+    let socket_instance = new Socket("ws://6103af11b2a0.ngrok.io/socket", { params: { token: token } });
 
     socket_instance.connect()
 
@@ -126,7 +126,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
         startChat={null}
       />
 
-      <View style={{ flex: 0.13 }}>
+      <View style={{ flex: 0.13, minHeight: 15 }}>
         <TouchableOpacity style={styles.header} onPress={() => toggleModal(true)}>
           <Avatar
             size="medium"
@@ -140,19 +140,27 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
             <Text style={{ padding: 5, textAlignVertical: 'center' }}>
               {(conversation.profile && conversation.profile.name) || conversation.name}
             </Text>
-            {online ? <Text><Badge status="success" style={styles.badge} /> Online</Text> : <Text><Badge status="error" style={styles.badge} /> Offline</Text>}
+            {online ?
+              <Text style={styles.activeStatus}><Badge status="success" style={styles.badge} /> Online</Text>
+              : <Text style={styles.activeStatus}><Badge status="error" style={styles.badge} /> Offline</Text>
+            }
           </View>
         </TouchableOpacity>
       </View>
 
       <View style={{ flex: 0.85 }}>
         {
-          messages.length > 0 ? <FlatList
-            inverted
-            data={messages}
-            renderItem={renderItem}
-            keyExtractor={item => item.id.toString()}
-          />
+          messages.length > 0 ?
+            <ImageBackground
+              source={require('../assets/images/chat-background.png')}
+              style={{ width: '100%', height: '100%' }}>
+              <FlatList
+                inverted
+                data={messages}
+                renderItem={renderItem}
+                keyExtractor={item => item.id.toString()}
+              />
+            </ImageBackground>
             : <EmptyResult text={`You don't have any conversations with ${conversation.profile && conversation.profile.name != '' ? conversation.profile.name : conversation.username}`} />
         }
       </View>
@@ -189,6 +197,9 @@ const styles = StyleSheet.create({
   },
   badge: {
     margin: 10
+  },
+  activeStatus: {
+    fontWeight: 'bold'
   }
 });
 

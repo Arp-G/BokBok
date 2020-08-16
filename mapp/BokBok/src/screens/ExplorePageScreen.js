@@ -1,24 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, View, Text, RefreshControl, ToastAndroid, ScrollView } from 'react-native';
-import { Avatar, Button } from 'react-native-elements';
+import { StyleSheet, View, RefreshControl, SafeAreaView } from 'react-native';
+import { Avatar, Button, Text } from 'react-native-elements';
 import bokbokApi from '../api/bokbok';
-
+import Carousel from 'react-native-snap-carousel';
 
 const ExplorePageScreen = ({ navigation }) => {
 
   const [randomPeople, setRandomPeople] = useState([]);
   const [refreshing, setRefreshing] = useState(true);
 
-
   const onRefresh = useCallback(() => {
     getRandomPeopleList();
   }, []);
 
-  const addConversation = async (receiver_id) => {
+  const addConversation = async (receiver) => {
     try {
-      await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver_id } });
-      ToastAndroid.show("User added to chat List !", ToastAndroid.SHORT);
-      setRandomPeople(randomPeople.filter((people) => people.id != receiver_id));
+      const response = await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver.id } });
+      const conversation = { ...receiver, id: response.data.conversation_id, name: receiver.username, profile: receiver.user_profile };
+      navigation.navigate('Chat', { screen: 'ChatPage', params: { conversation } })
     } catch (err) {
       console.log("ERROR !", err);
     }
@@ -44,37 +43,56 @@ const ExplorePageScreen = ({ navigation }) => {
     };
   });
 
-  return (
-    <ScrollView
-      pagingEnabled
-      horizontal
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {
-        randomPeople.map((people) => (
-          <View key={people.id}>
-            <View style={{ flex: 1, width: '100%' }}>
-              <Avatar
-                size="xlarge"
-                rounded
-                icon={{ name: 'user', type: 'font-awesome' }}
-                showEditButton
-                overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
-                source={(people.profile && people.profile.avatar && people.profile.avatar.original) || require('../assets/images/avatar-placeholder.png')}
-              />
-              <Text h3>{`Username: ${people.username}`}</Text>
-              {people.user_profile && people.user_profile.name != '' ? <Text h3>{`Username: ${people.user_profile.name}`}</Text> : null}
-              {people.user_profile && people.user_profile.dob != '' ? <Text h3>{`DOB: ${people.user_profile.dob}`}</Text> : null}
-              {people.user_profile && people.user_profile.bio != '' ? <Text h3>{`Bio: ${people.user_profile.bio}`}</Text> : null}
-            </View>
-            <Button title={'Add to chat list !'} onPress={() => addConversation(people.id)} />
-          </View>
+  renderItem = ({ item: people }) => {
+    return (
+      <View
+        style={{
+          flex: 0.85,
+          backgroundColor: 'floralwhite',
+          borderRadius: 5,
+          padding: 50,
+          marginLeft: 25,
+          marginRight: 25,
+          justifyContent: 'space-around',
+          alignItems: 'center'
+        }}>
+        <Avatar
+          size="xlarge"
+          rounded
+          icon={{ name: 'user', type: 'font-awesome' }}
+          overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
+          source={(people.user_profile && people.user_profile.avatar && people.user_profile.avatar.original)
+            ? { uri: people.user_profile.avatar.original }
+            : require('../assets/images/avatar-placeholder.png')
+          }
+        />
+        <Text style={{ fontSize: 25, fontWeight: 'bold' }}>{people.username}</Text>
+        {people.user_profile && people.user_profile.name != '' ? <Text h6> {`Name: ${people.user_profile.name}`}</Text> : null}
+        {people.user_profile && people.user_profile.dob != '' ? <Text h6>{`DOB: ${people.user_profile.dob}`}</Text> : null}
+        {people.user_profile && people.user_profile.bio != '' ? <Text h6>{`Bio: ${people.user_profile.bio}`}</Text> : null}
+        <View style={{ justifyContent: 'center' }}>
+          <Button
+            title={'Chat !'}
+            onPress={() => addConversation(people)} />
+        </View>
+      </View>
+    )
+  }
 
-        ))
-      }
-    </ScrollView>
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'tomato', paddingTop: 50, }}>
+      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', }}>
+        <Carousel
+          layout={"default"}
+          data={randomPeople}
+          sliderWidth={363}
+          itemWidth={350}
+          renderItem={renderItem}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          } />
+      </View>
+    </SafeAreaView>
   );
 };
 

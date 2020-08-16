@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, View, Modal } from 'react-native';
 import { Avatar, Button, Text, Icon } from 'react-native-elements';
 
 export default ({ isModalVisible, user, profile, toggleModal, startChat }) => {
@@ -18,7 +18,7 @@ export default ({ isModalVisible, user, profile, toggleModal, startChat }) => {
                         source={profile && profile.avatar ? { uri: profile.avatar.original } : null}
                         containerStyle={styles.modalAvatar}
                     />
-                    <Text style={styles.modalItem}>{`${user.username}`}</Text>
+                    <Text style={{ ...styles.modalItem, fontWeight: 'bold', fontSize: 25, paddingTop: 20 }}>{`${user.username}`}</Text>
                     {profile && profile.name != '' ? <Text style={styles.modalItem}>{`Name: ${profile.name}`}</Text> : null}
                     {profile && profile.dob != '' ? <Text style={styles.modalItem}>{`DOB: ${profile.dob}`}</Text> : null}
                     {profile && profile.bio != ''
@@ -46,7 +46,7 @@ export default ({ isModalVisible, user, profile, toggleModal, startChat }) => {
                     />
                 </View>
             </View>
-        </Modal>
+        </Modal >
     );
 }
 
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         flex: 0.9,
         width: '90%',
         justifyContent: 'center',
-        backgroundColor: 'grey',
+        backgroundColor: '#ff6f69',
         borderWidth: 2,
         borderRadius: 50,
         alignItems: 'center',

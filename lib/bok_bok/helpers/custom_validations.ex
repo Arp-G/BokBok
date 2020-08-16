@@ -5,7 +5,7 @@ defmodule BokBok.Helpers.CustomValidations do
     if valid?,
       do: [],
       else: [
-        {field, "must be of 10 to 15 digits, including country code starting with '+' symbol"}
+        {field, "must be of 10 to 15 digits"}
       ]
   end
 

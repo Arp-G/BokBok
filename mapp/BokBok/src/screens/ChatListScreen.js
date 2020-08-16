@@ -18,7 +18,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
     const fetchConversationsList = () => {
 
-        let socket_instance = new Socket("ws://73d90d83527c.ngrok.io/socket", { params: { token: token } });
+        let socket_instance = new Socket("ws://6103af11b2a0.ngrok.io/socket", { params: { token: token } });
 
         socket_instance.connect();
 
@@ -119,7 +119,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
                     })}
                     renderItem={renderItem}
                 />
-                : <EmptyResult text={"You dont have any conversations, find some new people to chat with in the explore section.."} />
+                : <EmptyResult text={"You dont have any conversations, discover new people to chat with in the explore section.."} />
             }
 
         </View>

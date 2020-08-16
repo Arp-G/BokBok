@@ -99,9 +99,31 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
     );
 
     const ExploreTabComponent = () => (
-        <ExploreTab.Navigator>
-            <ExploreTab.Screen name='ExplorePage' component={ExplorePageScreen} />
-            <ExploreTab.Screen name='SearchPeople' component={SearchPageScreen} />
+        <ExploreTab.Navigator
+
+            activeColor="#f0edf6"
+            inactiveColor="#3e2465"
+            barStyle={{ backgroundColor: '#694fad' }}
+
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+
+                    if (route.name === 'Explore') {
+                        iconName = 'meetup';
+                    } else if (route.name === 'Search') {
+                        iconName = 'binoculars';
+                    }
+                    else {
+                        iconName = 'address-book';
+                    }
+
+                    return <Icon name={iconName} type='font-awesome' color={color} size={size} />;
+                },
+            })}
+        >
+            <ExploreTab.Screen name='Explore' component={ExplorePageScreen} />
+            <ExploreTab.Screen name='Search' component={SearchPageScreen} />
             <ExploreTab.Screen name='Contacts' component={ContactsPageScreen} />
         </ExploreTab.Navigator>
     );
@@ -178,9 +200,7 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
                     },
                 })}
             >
-                <Tab.Screen name='Chat'
-                    component={ChatStackComponent}
-                />
+                <Tab.Screen name='Chat' component={ChatStackComponent} />
                 <Tab.Screen name='Explore' component={ExploreTabComponent} />
                 <Tab.Screen name='Accounts' component={AccountsDrawerComponent} />
             </Tab.Navigator >
