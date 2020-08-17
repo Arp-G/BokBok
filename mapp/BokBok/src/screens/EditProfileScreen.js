@@ -11,7 +11,6 @@ var Spinner = require('react-native-spinkit');
 const EditProfileScreen = () => {
 
     const navigation = useNavigation();
-
     const [name, setName] = useState('');
     const [avatar, setAvatar] = useState(null);
     const [bio, setBio] = useState('');
@@ -37,7 +36,6 @@ const EditProfileScreen = () => {
         try {
             setLoading(true);
             const { data: { data: { name, bio, dob, avatar } } } = await bokbokApi.get('/user_profile');
-
             setName(name);
             setBio(bio);
             setDob(new Date(dob)); // NOT WORKING, incorrect DOB string
@@ -53,9 +51,7 @@ const EditProfileScreen = () => {
     }
 
     const updateUserProfile = async () => {
-
         var FormData = require('form-data');
-
         var data = new FormData();
         data.append('name', name);
         data.append('bio', bio);
@@ -105,7 +101,6 @@ const EditProfileScreen = () => {
     });
 
     const handle_avatar_update = () => {
-
         const options = {
             title: 'Select Avatar',
             customButtons: [{ name: 'remove', title: 'Remove Profile picture' }],
@@ -115,7 +110,6 @@ const EditProfileScreen = () => {
             },
             noData: true // If this is not done the whole image binary(base 64 encoded will be given) which leads to memory usage
         };
-
 
         ImagePicker.showImagePicker(options, (response) => {
 
@@ -151,8 +145,6 @@ const EditProfileScreen = () => {
                     <Spinner style={styles.spinner} isVisible={true} size={100} type={'Circle'} color='#d35400' size={50} />
                 </View>
             </ImageBackground>
-
-
         );
     }
 
@@ -174,14 +166,12 @@ const EditProfileScreen = () => {
                     overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
                     source={avatar || null}
                 />
-
                 <Input label="Name"
                     onChangeText={setName}
                     value={name}
                     activeOpacity={0.7}
                     autoCapitalize="none"
                     autoCorrect={false} />
-
                 <TouchableOpacity
                     style={styles.datepicker}
                     onPress={() => setshowDatePicker(true)}>
@@ -193,7 +183,6 @@ const EditProfileScreen = () => {
                         leftIcon={{ type: 'font-awesome', name: 'calendar', color: 'navy' }}
                         autoCorrect={false} />
                 </TouchableOpacity>
-
                 {showDatePicker && <DateTimePicker
                     value={dob}
                     maximumDate={new Date()}
@@ -203,13 +192,11 @@ const EditProfileScreen = () => {
                     onChange={changeDob}
                     isVisible={false}
                 />}
-
                 <Input label="Bio"
                     value={bio}
                     onChangeText={setBio}
                     leftIcon={{ type: 'font-awesome', name: 'user-circle-o', color: 'navy' }}
                 />
-
                 {saving
                     ? <Text>
                         Saving
@@ -218,11 +205,9 @@ const EditProfileScreen = () => {
                     </Text>
                     : null
                 }
-
                 <Button
                     title="Update Profile !"
                     onPress={updateUserProfile}
-                    diabled={saving}
                 />
             </View>
         </ImageBackground>

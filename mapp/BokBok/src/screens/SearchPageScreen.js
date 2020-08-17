@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, Button, ToastAndroid } from 'react-native';
+import { View, FlatList, Button, ToastAndroid } from 'react-native';
 import { ListItem, SearchBar } from 'react-native-elements';
 import bokbokApi from '../api/bokbok';
 import UserViewModal from '../components/userViewModal';
 import EmptyResult from '../components/emptyResult';
+import { getConversation } from '../helpers/helper';
 
 const SearchPageScreen = ({ navigation }) => {
 
@@ -26,8 +27,7 @@ const SearchPageScreen = ({ navigation }) => {
 
   const startChat = async (receiver) => {
     try {
-      const response = await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver.id } });
-      const conversation = { ...receiver, id: response.data.conversation_id, name: receiver.username, profile: receiver.user_profile };
+      const conversation = await getConversation(receiver);
       setSelectedUser(null);
       navigation.navigate('Chat', { screen: 'ChatPage', params: { conversation } })
     } catch (err) {
@@ -39,16 +39,10 @@ const SearchPageScreen = ({ navigation }) => {
     }
   }
 
-
   useEffect(() => {
-    const removeFocusListener = navigation.addListener('focus', () => {
-      setSearchResult([]);
-    });
-    return () => {
-      removeFocusListener();
-    };
+    const removeFocusListener = navigation.addListener('focus', () => setSearchResult([]));
+    return () => removeFocusListener();
   });
-
 
   renderItem = ({ item: search }) => {
 
@@ -60,7 +54,6 @@ const SearchPageScreen = ({ navigation }) => {
             search.user_profile && search.user_profile.avatar
               ? { uri: search.user_profile.avatar.thumbnail }
               : require('../assets/images/avatar-placeholder.png')
-
         }}
         onPress={() => setSelectedUser(search)}
         bottomDivider
@@ -97,7 +90,6 @@ const SearchPageScreen = ({ navigation }) => {
           raised />
       </View>
       {
-
         result.length > 0
           ? <FlatList
             keyExtractor={(search) => search.id.toString()}
@@ -106,11 +98,8 @@ const SearchPageScreen = ({ navigation }) => {
           />
           : <EmptyResult text={"Search for people..."} />
       }
-
     </View>
   )
 }
-
-const styles = StyleSheet.create({});
 
 export default SearchPageScreen;

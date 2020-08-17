@@ -29,7 +29,6 @@ const EditPasswordScreen = () => {
         setSaving(false);
     }
 
-
     return (
         <>
             <ImageBackground source={require('../assets/images/background4.jpg')} style={{ width: '100%', height: '100%' }}>
@@ -70,10 +69,8 @@ const EditPasswordScreen = () => {
                     }
                 </View>
             </ImageBackground>
-
         </>
     );
 };
-
 
 export default EditPasswordScreen;

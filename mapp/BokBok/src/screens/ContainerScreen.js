@@ -108,11 +108,9 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
 
     const ExploreTabComponent = () => (
         <ExploreTab.Navigator
-
             activeColor="#f0edf6"
             inactiveColor="#3e2465"
             barStyle={{ backgroundColor: '#694fad' }}
-
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
@@ -125,11 +123,9 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
                     else {
                         iconName = 'address-book';
                     }
-
                     return <Icon name={iconName} type='font-awesome' color={color} size={size} />;
                 },
-            })}
-        >
+            })}>
             <ExploreTab.Screen name='Explore' component={ExplorePageScreen} />
             <ExploreTab.Screen name='Search' component={SearchPageScreen} />
             <ExploreTab.Screen name='Contacts' component={ContactsPageScreen} />
@@ -142,7 +138,6 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
         <AccountsDrawer.Navigator
             initialRouteName="Edit Profile"
             drawerContent={(props) => {
-
                 return (
                     <ImageBackground source={require('../assets/images/background5.jpg')} style={{ width: '100%', height: '100%' }}>
                         <DrawerContentScrollView {...props} >
@@ -178,10 +173,7 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
         </AccountsDrawer.Navigator>
     );
 
-
     const Main = () => {
-
-
         return (
             <Tab.Navigator
                 tabBarOptions={{
@@ -189,7 +181,7 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
                     style: { backgroundColor: '#ffe6d0' },
                     activeTintColor: 'green',
                     inactiveTintColor: 'black',
-                    // style: { display: 'none' }
+                    // style: { display: 'none' } , hides the tab bar
                 }}
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
@@ -203,11 +195,9 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
                         else {
                             iconName = 'cog';
                         }
-
                         return <Icon name={iconName} type='font-awesome' color={color} size={size} />;
                     },
-                })}
-            >
+                })}>
                 <Tab.Screen name='Chat' component={ChatStackComponent} />
                 <Tab.Screen name='Explore' component={ExploreTabComponent} />
                 <Tab.Screen name='Accounts' component={AccountsDrawerComponent} />
@@ -219,19 +209,14 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
         return <SplashScreen />;
     }
 
-
     return (
         <>
-            <Stack.Navigator screenOptions={{
-                headerShown: false
-            }} >
-
+            <Stack.Navigator screenOptions={{ headerShown: false }} >
                 {
                     token
                         ? (<Stack.Screen name="Main" component={Main} />)
                         : (<Stack.Screen name="Auth" component={Auth} />)
                 }
-
             </Stack.Navigator>
         </>
     );

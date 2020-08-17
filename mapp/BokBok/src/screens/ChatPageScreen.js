@@ -7,7 +7,7 @@ import { Socket, Presence } from "phoenix";
 import UserViewModal from '../components/userViewModal';
 import moment from 'moment';
 import EmptyResult from '../components/emptyResult';
-import {WEBSOCKET_API} from '../helpers/helper';
+import { WEBSOCKET_API } from '../helpers/helper';
 
 var Spinner = require('react-native-spinkit');
 
@@ -74,9 +74,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
   useEffect(() => {
     // Every time user opens this page fetch latest message details
-    const removeFocusListener = navigation.addListener('focus', () => {
-      fetchMessageList();
-    });
+    const removeFocusListener = navigation.addListener('focus', () => fetchMessageList());
 
     const removeBlurListener = navigation.addListener('blur', () => {
       channel && channel.leave();
@@ -112,11 +110,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
   if (loading) {
     return (
-      <View style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
+      <View style={styles.loading}>
         <Text style={{ paddingBottom: 20 }}> Loading messages...</Text>
         <Spinner isVisible={true} size={20} type={'CircleFlip'} color='red' size={50} />
       </View>);
@@ -155,7 +149,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
         </TouchableOpacity>
       </View>
 
-      <View style={{ flex: 0.85 }}>
+      <View style={{ flex: 0.81 }}>
         {
           messages.length > 0 ?
             <ImageBackground
@@ -172,8 +166,8 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
         }
       </View>
 
-      <View style={{ flexDirection: 'row', flex: 0.05, minHeight: 20, marginBottom: 5 }} >
-        <View style={{ flex: 9, borderColor: '#000080', borderWidth: 2, borderRadius: 20, marginLeft: 5, marginRight: 5, height: '100%' }}>
+      <View style={styles.inputAreaWrapper} >
+        <View style={styles.inputArea}>
           <TextInput
             placeholder={'Type your message here...'}
             onChangeText={setChat}
@@ -190,6 +184,11 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 };
 
 const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   header: {
     flex: 1,
     alignSelf: 'flex-start',
@@ -207,6 +206,21 @@ const styles = StyleSheet.create({
   },
   activeStatus: {
     fontWeight: 'bold'
+  },
+  inputAreaWrapper: {
+    flexDirection: 'row',
+    flex: 0.053,
+    minHeight: 20,
+    marginBottom: 5
+  },
+  inputArea: {
+    flex: 9,
+    borderColor: '#000080',
+    borderWidth: 2,
+    borderRadius: 20,
+    marginLeft: 5,
+    marginRight: 5,
+    height: '100%'
   }
 });
 

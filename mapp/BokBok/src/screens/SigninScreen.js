@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, ImageBackground, ToastAndroid } from 'react-native';
+import { View, ImageBackground, ToastAndroid } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Text, Button, Input } from 'react-native-elements';
 import { bindActionCreators } from 'redux';
@@ -8,6 +8,7 @@ import { signin } from '../actions/auth';
 import { connect } from 'react-redux';
 import NavLink from '../components/NavLink';
 import ErrorList from '../components/ErrorList';
+import authStyles from '../styles/auth';
 
 const SigninScreen = ({ signin, navigation }) => {
 
@@ -54,18 +55,18 @@ const SigninScreen = ({ signin, navigation }) => {
 
   return (
     <ImageBackground source={require('../assets/images/background.jpg')} style={{ width: '100%', height: '110%' }}>
-      <View style={styles.form}>
+      <View style={authStyles.form}>
         <>
-          <Text h3 h3Style={styles.heading}>Sign In to Bok Bok</Text>
+          <Text h3 h3Style={authStyles.heading}>Sign In to Bok Bok</Text>
           <Input label="Username"
-            labelStyle={styles.label}
+            labelStyle={authStyles.label}
             onChangeText={setUsername}
             autoCapitalize="none"
             autoCorrect={false}
             leftIcon={{ type: 'font-awesome', name: 'user', color: 'navy' }}
           />
           <Input label="Password"
-            labelStyle={styles.label}
+            labelStyle={authStyles.label}
             onChangeText={setPassword}
             secureTextEntry
             leftIcon={{ type: 'font-awesome', name: 'lock', color: 'navy' }}
@@ -80,9 +81,7 @@ const SigninScreen = ({ signin, navigation }) => {
             title="Sign In !"
             onPress={() => onSubmit({ username, password })}
             loading={loading}
-            buttonStyle={
-              styles.button
-            }
+            buttonStyle={authStyles.button}
           />
         </>
       </View>
@@ -90,43 +89,6 @@ const SigninScreen = ({ signin, navigation }) => {
   );
 };
 
-
-/*
-  signin is an action, which we import from "actions/auth", through mapDispatchToProps we provide a props.signin function
-  to this component, this version of signin is created by "bindActionCreators". Calling this props.signin therefor dispatches
-  the signin action on the global state.
-*/
-
 const mapDispatchToProps = dispatch => bindActionCreators({ signin }, dispatch);
 
-
-const styles = StyleSheet.create({
-  button: {
-    width: 200,
-    marginLeft: 15,
-    marginTop: 30
-  },
-  form: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    width: '100%',
-    padding: 20,
-    marginBottom: 100
-  },
-  heading: {
-    color: 'black',
-    fontFamily: 'sans-serif',
-    fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
-    marginBottom: 50
-  },
-  label: {
-    color: 'black'
-  }
-});
-
 export default connect(null, mapDispatchToProps)(SigninScreen);
-
