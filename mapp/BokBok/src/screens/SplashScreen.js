@@ -2,16 +2,13 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 var Spinner = require('react-native-spinkit');
 
-const SplashScreen = () => {
-
-  return (
-    <View style={styles.splash}>
-      <Text style={styles.title}> Bok Bok !</Text>
-      <Spinner style={styles.spinner} isVisible={true} size={100} type={'9CubeGrid'} color='#d35400' />
-      <Text style={styles.author}> ... by Arpan</Text>
-    </View>
-  );
-};
+const SplashScreen = () => (
+  <View style={styles.splash}>
+    <Text style={styles.title}> Bok Bok !</Text>
+    <Spinner style={styles.spinner} isVisible={true} size={100} type={'9CubeGrid'} color='#d35400' />
+    <Text style={styles.author}> ... by Arpan</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
   splash: {
@@ -35,8 +32,6 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     fontWeight: 'bold'
   }
-}
-);
-
+});
 
 export default SplashScreen;

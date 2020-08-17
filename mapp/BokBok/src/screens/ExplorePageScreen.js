@@ -1,29 +1,27 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, View, RefreshControl, SafeAreaView, ToastAndroid } from 'react-native';
+import { View, RefreshControl, SafeAreaView, ToastAndroid } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-elements';
 import bokbokApi from '../api/bokbok';
 import Carousel from 'react-native-snap-carousel';
+import { getConversation } from '../helpers/helper';
 
 const ExplorePageScreen = ({ navigation }) => {
 
   const [randomPeople, setRandomPeople] = useState([]);
   const [refreshing, setRefreshing] = useState(true);
 
-  const onRefresh = useCallback(() => {
-    getRandomPeopleList();
-  }, []);
+  const onRefresh = useCallback(() => getRandomPeopleList(), []);
 
   const addConversation = async (receiver) => {
     try {
-      const response = await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver.id } });
-      const conversation = { ...receiver, id: response.data.conversation_id, name: receiver.username, profile: receiver.user_profile };
+      const conversation = await getConversation(receiver);
       navigation.navigate('Chat', { screen: 'ChatPage', params: { conversation } })
     } catch (err) {
       ToastAndroid.showWithGravity(
         "Failed to fetch conversation ID !",
         ToastAndroid.SHORT,
         ToastAndroid.BOTTOM
-      )
+      );
     }
   }
 
@@ -32,7 +30,11 @@ const ExplorePageScreen = ({ navigation }) => {
       const resp = await bokbokApi.get('/get_random');
       setRandomPeople(resp.data.data);
     } catch (err) {
-      console.log("ERROR !", err)
+      ToastAndroid.showWithGravity(
+        "Failed to fetch people list !",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM
+      )
     }
     setRefreshing(false);
   }
@@ -99,7 +101,5 @@ const ExplorePageScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default ExplorePageScreen;

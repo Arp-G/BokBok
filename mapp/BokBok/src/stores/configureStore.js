@@ -1,14 +1,10 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import authReducer from '../reducers/auth';
 import chatReducer from '../reducers/chat';
-import logger from 'redux-logger'
+import logger from 'redux-logger';
 
-const rootReducer = combineReducers(
-    { auth: authReducer, chat: chatReducer }
-);
+const rootReducer = combineReducers({ auth: authReducer, chat: chatReducer });
 
-const configureStore = () => {
-    return createStore(rootReducer, applyMiddleware(logger));
-}
+const configureStore = () => createStore(rootReducer, applyMiddleware(logger));
 
 export default configureStore;

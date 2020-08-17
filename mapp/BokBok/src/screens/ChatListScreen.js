@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, ToastAndroid } from 'react-native';
+import { View, FlatList, ToastAndroid } from 'react-native';
 import { Text, ListItem, SearchBar } from 'react-native-elements';
 import { load_conversations, update_conversation } from '../actions/chat';
 import { bindActionCreators } from 'redux';
@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Socket } from "phoenix";
 import EmptyResult from '../components/emptyResult';
 var Spinner = require('react-native-spinkit');
-
+import { WEBSOCKET_API } from '../helpers/helper';
 const ChatListScreen = ({ navigation, token, id, conversations, load_conversations, update_conversation }) => {
 
     const [socket, setSocket] = useState(null);
@@ -17,7 +17,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
     const fetchConversationsList = () => {
 
-        let socket_instance = new Socket("ws://057350ddee08.ngrok.io/socket", { params: { token: token } });
+        let socket_instance = new Socket(WEBSOCKET_API, { params: { token: token } });
 
         socket_instance.connect();
 
@@ -82,23 +82,25 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
         };
     });
 
-    renderItem = ({ item: conversation }) => (<ListItem
-        title={conversation.name}
-        subtitle={conversation.last_message}
-        leftAvatar={{
-            source:
-                conversation.profile && conversation.profile.avatar
-                    ? { uri: conversation.profile.avatar.thumbnail }
-                    : require('../assets/images/avatar-placeholder.png')
+    renderItem = ({ item: conversation }) => (
+        <ListItem
+            title={conversation.name}
+            subtitle={conversation.last_message}
+            leftAvatar={{
+                source:
+                    conversation.profile && conversation.profile.avatar
+                        ? { uri: conversation.profile.avatar.thumbnail }
+                        : require('../assets/images/avatar-placeholder.png')
 
-        }}
-        badge={conversation.unseen_message_count > 0 ? { status: "success", value: conversation.unseen_message_count } : null}
-        onPress={() => {
-            navigation.navigate('Chat', { screen: 'ChatPage', params: { conversation } });
-        }}
-        bottomDivider
-        chevron
-    />);
+            }}
+            badge={conversation.unseen_message_count > 0 ? { status: "success", value: conversation.unseen_message_count } : null}
+            onPress={() => {
+                navigation.navigate('Chat', { screen: 'ChatPage', params: { conversation } });
+            }}
+            bottomDivider
+            chevron
+        />
+    );
 
 
     if (loading) return (
@@ -112,8 +114,6 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
         </View>
     );
 
-
-    // Chat, ChatPage
     return (
         <View>
             <SearchBar
@@ -134,14 +134,9 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
                 />
                 : <EmptyResult text={"You dont have any conversations, discover new people to chat with in the explore section.."} />
             }
-
         </View>
     )
-
-
 }
-
-const styles = StyleSheet.create({});
 
 const mapStateToProps = ({ auth: { token: token, id: id }, chat: { conversations: conversations } }) => ({ token, id, conversations });
 

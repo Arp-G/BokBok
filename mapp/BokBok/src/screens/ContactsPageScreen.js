@@ -4,6 +4,7 @@ import Contacts from 'react-native-contacts';
 import { ListItem, Text, Image } from 'react-native-elements';
 import UserViewModal from '../components/userViewModal';
 import bokbokApi from '../api/bokbok';
+import { getConversation } from '../helpers/helper';
 
 const ContactsPageScreen = ({ navigation }) => {
 
@@ -30,8 +31,7 @@ const ContactsPageScreen = ({ navigation }) => {
 
     const startChat = async (receiver) => {
         try {
-            const response = await bokbokApi.get('/get_conversation', { params: { receiver_id: receiver.id } });
-            const conversation = { ...receiver, id: response.data.conversation_id }
+            const conversation = await getConversation(receiver);
             setSelectedUser(null);
             navigation.navigate('Chat', { screen: 'ChatPage', params: { conversation } })
         } catch (err) {
@@ -42,7 +42,6 @@ const ContactsPageScreen = ({ navigation }) => {
             );
         }
     }
-
 
     const requestContactPermission = async () => {
         try {
