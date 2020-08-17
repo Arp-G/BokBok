@@ -1,7 +1,7 @@
 defmodule BokBok.Accounts do
   import Ecto.Query, warn: false
 
-  alias Ecto.{Multi}
+  alias Ecto.Multi
 
   alias BokBok.{
     Repo,
