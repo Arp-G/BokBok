@@ -6,8 +6,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Socket } from "phoenix";
 import EmptyResult from '../components/emptyResult';
+import { WEBSOCKET_API } from '../helpers/api';
+
 var Spinner = require('react-native-spinkit');
-import { WEBSOCKET_API } from '../helpers/helper';
+
 const ChatListScreen = ({ navigation, token, id, conversations, load_conversations, update_conversation }) => {
 
     const [socket, setSocket] = useState(null);

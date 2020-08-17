@@ -25,7 +25,6 @@ const ContactsPageScreen = ({ navigation }) => {
                 ToastAndroid.BOTTOM
             );
         }
-
         setLoading(false);
     }
 

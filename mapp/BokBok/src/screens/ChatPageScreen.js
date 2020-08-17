@@ -7,7 +7,7 @@ import { Socket, Presence } from "phoenix";
 import UserViewModal from '../components/userViewModal';
 import moment from 'moment';
 import EmptyResult from '../components/emptyResult';
-import { WEBSOCKET_API } from '../helpers/helper';
+import { WEBSOCKET_API } from '../helpers/api';
 
 var Spinner = require('react-native-spinkit');
 
