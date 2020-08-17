@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Socket } from "phoenix";
 import EmptyResult from '../components/emptyResult';
 var Spinner = require('react-native-spinkit');
-
+import { WEBSOCKET_API } from '../helpers/helper';
 const ChatListScreen = ({ navigation, token, id, conversations, load_conversations, update_conversation }) => {
 
     const [socket, setSocket] = useState(null);
@@ -17,7 +17,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
     const fetchConversationsList = () => {
 
-        let socket_instance = new Socket("ws://a221bb8e6bed.ngrok.io/socket", { params: { token: token } });
+        let socket_instance = new Socket(WEBSOCKET_API, { params: { token: token } });
 
         socket_instance.connect();
 

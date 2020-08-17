@@ -7,6 +7,7 @@ import { Socket, Presence } from "phoenix";
 import UserViewModal from '../components/userViewModal';
 import moment from 'moment';
 import EmptyResult from '../components/emptyResult';
+import {WEBSOCKET_API} from '../helpers/helper';
 
 var Spinner = require('react-native-spinkit');
 
@@ -41,7 +42,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
     setLoading(true);
 
-    let socket_instance = new Socket("ws://a221bb8e6bed.ngrok.io/socket", { params: { token: token } });
+    let socket_instance = new Socket(WEBSOCKET_API, { params: { token: token } });
 
     socket_instance.connect()
 
