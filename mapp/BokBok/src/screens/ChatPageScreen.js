@@ -41,7 +41,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
     setLoading(true);
 
-    let socket_instance = new Socket("ws://a221bb8e6bed.ngrok.io/socket", { params: { token: token } });
+    let socket_instance = new Socket("ws://057350ddee08.ngrok.io/socket", { params: { token: token } });
 
     socket_instance.connect()
 

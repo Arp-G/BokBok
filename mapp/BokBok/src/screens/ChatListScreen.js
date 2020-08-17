@@ -17,7 +17,7 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
 
     const fetchConversationsList = () => {
 
-        let socket_instance = new Socket("ws://a221bb8e6bed.ngrok.io/socket", { params: { token: token } });
+        let socket_instance = new Socket("ws://057350ddee08.ngrok.io/socket", { params: { token: token } });
 
         socket_instance.connect();
 
@@ -43,10 +43,15 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
             .receive("ok", payload => {
                 load_conversations(payload.conversations);
                 setLoading(false);
+                ToastAndroid.showWithGravity(
+                    "Fetched Conversation list !",
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM
+                )
             }
             )
             .receive("error", err => ToastAndroid.showWithGravity(
-                "Error, COuld not fetch conversations list !",
+                "Error, Could not fetch conversations list !",
                 ToastAndroid.LONG,
                 ToastAndroid.BOTTOM
             ));
