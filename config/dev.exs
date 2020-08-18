@@ -1,16 +1,5 @@
 use Mix.Config
 
-# Configure your database
-config :bok_bok, BokBok.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "bok_bok_dev",
-  hostname: "localhost",
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10,
-  secret_key: "kjoy3o1zeidquwy1398juxzldjlksahdk3",
-  salt: "user_salt"
-
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
