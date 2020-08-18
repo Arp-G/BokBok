@@ -1,3 +1,3 @@
-export const SITE_URL = 'http://27d4936898ee.ngrok.io';
+export const SITE_URL = 'https://gentle-springs-13724.herokuapp.com';
 export const API = `${SITE_URL}/api`;
-export const WEBSOCKET_API = `${SITE_URL.replace('http', 'ws')}/socket`;
+export const WEBSOCKET_API = `${SITE_URL.replace('https', 'ws')}/socket`;
