@@ -15,7 +15,8 @@ config :bok_bok, BokBokWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "6JipLmnVWRRi21EwAfLCEcLY4k6TPYFqIU1FYS+ach/xaVEvsNTgH0UpLdCIUJsT",
   render_errors: [view: BokBokWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: BokBok.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: BokBok.PubSub,
+  live_view: [signing_salt: "SE/ql0ltzGf/oFOSWwLezfVeer6e+sps"]
 
 # Configures Elixir's Logger
 config :logger, :console,

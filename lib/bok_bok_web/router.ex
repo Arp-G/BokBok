@@ -1,5 +1,7 @@
 defmodule BokBokWeb.Router do
   use BokBokWeb, :router
+  import Phoenix.LiveDashboard.Router
+  import Plug.BasicAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -15,6 +17,15 @@ defmodule BokBokWeb.Router do
 
   pipeline :token_auth do
     plug BokBokWeb.TokenAuth
+  end
+
+  pipeline :admins_only do
+    plug :basic_auth, username: "admin", password: "ArpRokzz"
+  end
+
+  scope "/" do
+    pipe_through [:browser, :admins_only]
+    live_dashboard "/dashboard"
   end
 
   scope "/api", BokBokWeb do

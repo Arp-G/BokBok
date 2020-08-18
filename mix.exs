@@ -20,7 +20,7 @@ defmodule BokBok.MixProject do
   def application do
     [
       mod: {BokBok.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :os_mon]
     ]
   end
 
@@ -33,8 +33,9 @@ defmodule BokBok.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.10"},
-      {:phoenix_pubsub, "~> 1.1"},
+      {:phoenix, "~> 1.5.0"},
+      {:phoenix_pubsub, "~> 2.0"},
+      {:plug_cowboy, "~> 2.1"},
       {:phoenix_ecto, "~> 4.0"},
       {:ecto_sql, "~> 3.4"},
       {:ecto_enum, "~> 1.4"},
@@ -43,7 +44,6 @@ defmodule BokBok.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"},
       {:argon2_elixir, "~> 2.0"},
       {:arc, "~> 0.11.0"},
       {:sweet_xml, "~> 0.6.6"},
@@ -52,7 +52,8 @@ defmodule BokBok.MixProject do
       {:arc_ecto, "~> 0.11.2"},
       {:faker, "~> 0.12", only: [:dev, :test]},
       {:kadabra, "~> 0.4.4"},
-      {:pigeon, "~> 1.5.1"}
+      {:pigeon, "~> 1.5.1"},
+      {:phoenix_live_dashboard, "~> 0.1"}
     ]
   end
 

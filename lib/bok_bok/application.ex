@@ -10,6 +10,7 @@ defmodule BokBok.Application do
     children = [
       BokBok.Repo,
       BokBokWeb.Endpoint,
+      {Phoenix.PubSub, [name: BokBok.PubSub]},
       BokBokWeb.Presence
     ]
 
