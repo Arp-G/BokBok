@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, RefreshControl, SafeAreaView, ToastAndroid } from 'react-native';
+import { View, RefreshControl, SafeAreaView, ToastAndroid, StyleSheet } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-elements';
 import bokbokApi from '../api/bokbok';
 import Carousel from 'react-native-snap-carousel';
@@ -66,17 +66,30 @@ const ExplorePageScreen = ({ navigation }) => {
           size="xlarge"
           rounded
           icon={{ name: 'user', type: 'font-awesome' }}
-          overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
+          overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 , marginBottom: 20}}
           source={(people.user_profile && people.user_profile.avatar && people.user_profile.avatar.original)
             ? { uri: people.user_profile.avatar.original }
             : require('../assets/images/avatar-placeholder.png')
           }
         />
-        <Text style={{ fontSize: 25, fontWeight: 'bold' }}>{people.username}</Text>
-        {people.user_profile && people.user_profile.name != '' ? <Text h6> {`Name: ${people.user_profile.name}`}</Text> : null}
-        {people.user_profile && people.user_profile.dob != '' ? <Text h6>{`DOB: ${people.user_profile.dob}`}</Text> : null}
-        {people.user_profile && people.user_profile.bio != '' ? <Text h6>{`Bio: ${people.user_profile.bio}`}</Text> : null}
-        <View style={{ justifyContent: 'center' }}>
+        <View style={{ ...styles.inputView, marginTop: 10 }}>
+          <Text style={{ fontSize: 25, fontWeight: 'bold', paddingBottom: 10 }}>{people.username}</Text>
+        </View>
+
+
+        <View style={styles.inputView}>
+          {people.user_profile && people.user_profile.name != '' && <Text style={styles.field}> {`Name: ${people.user_profile.name}`}</Text>}
+        </View>
+
+        <View style={styles.inputView}>
+          {people.user_profile && people.user_profile.dob != '' && <Text style={styles.field}>{`DOB: ${people.user_profile.dob}`}</Text>}
+        </View>
+
+        <View style={styles.inputView}>
+          {people.user_profile && people.user_profile.bio != '' && <Text style={styles.field}>{`Bio: ${people.user_profile.bio}`}</Text>}
+        </View>
+
+        <View style={styles.inputViewButton}>
           <Button
             title={'Chat !'}
             onPress={() => addConversation(people)} />
@@ -101,5 +114,17 @@ const ExplorePageScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  field: {
+    paddingBottom: 20
+  },
+  inputView: {
+    padding: 20
+  },
+  inputViewButton: {
+    marginTop: 30
+  }
+})
 
 export default ExplorePageScreen;

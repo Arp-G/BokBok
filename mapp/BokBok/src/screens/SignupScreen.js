@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ImageBackground } from 'react-native';
+import { ImageBackground, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Text, Button, Input } from 'react-native-elements';
 import { bindActionCreators } from 'redux';
@@ -32,10 +32,10 @@ const SignupScreen = ({ signin }) => {
   }
 
   return (
-    <ImageBackground source={require('../assets/images/background.jpg')} style={{ width: '100%', height: '110%' }}>
-      <View style={authStyles.form}>
+    <ImageBackground source={require('../assets/images/background.jpg')} style={{ width: '100%', height: '100%' }}>
+      <ScrollView contentContainerStyle={authStyles.form}>
         <>
-          <Text h3 h3Style={authStyles.heading}>Sign Up for Bok Bok</Text>
+          <Text style={authStyles.heading}>Sign Up for Bok Bok</Text>
           <Input
             label="Username"
             labelStyle={authStyles.label}
@@ -84,7 +84,7 @@ const SignupScreen = ({ signin }) => {
             }
           />
         </>
-      </View>
+      </ScrollView>
     </ImageBackground>
   );
 };

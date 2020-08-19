@@ -11,17 +11,17 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     width: '100%',
-    padding: 20,
-    marginBottom: 100
+    padding: 20
   },
   heading: {
     color: 'black',
     fontFamily: 'sans-serif',
+    fontSize: 25,
     fontWeight: 'bold',
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
-    marginBottom: 50
+    marginBottom: 40
   },
   label: {
     color: 'black'

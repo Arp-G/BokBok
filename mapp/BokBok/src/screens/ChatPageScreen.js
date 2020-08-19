@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
+import { StyleSheet, View, FlatList, TextInput, TouchableOpacity, ImageBackground, Keyboard, PixelRatio } from 'react-native';
 import { Avatar, Badge, Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
@@ -175,7 +175,7 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
             style={{ flex: 9 }}
           />
         </View>
-        <TouchableOpacity style={{ flex: 1 }} onPress={sendMessage}>
+        <TouchableOpacity style={{ flex: 1, paddingTop: 10 }} onPress={sendMessage}>
           <Icon name="paper-plane" size={30} color="blue" />
         </TouchableOpacity>
       </View>
@@ -196,7 +196,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     minHeight: 80,
     width: '100%',
-    paddingTop: 10
+    paddingTop: 10,
+    zIndex: 1
   },
   headerText: {
     marginLeft: 10
@@ -210,8 +211,8 @@ const styles = StyleSheet.create({
   inputAreaWrapper: {
     flexDirection: 'row',
     flex: 0.053,
-    minHeight: 20,
-    marginBottom: 5
+    marginBottom: 5,
+    minHeight: 30
   },
   inputArea: {
     flex: 9,
