@@ -12,6 +12,7 @@ password_hash = Argon2.hash_pwd_salt("12345678aB")
 
   user = %BokBok.Accounts.User{
     username: fakeusername,
+    email: "#{fakeusername}@email.com",
     phone_number:
       System.unique_integer([:positive])
       |> Integer.to_string()

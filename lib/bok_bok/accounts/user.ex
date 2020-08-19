@@ -8,6 +8,7 @@ defmodule BokBok.Accounts.User do
 
   schema "users" do
     field :username, :string, null: false
+    field :email, :string, null: false
     field :password_hash, :string, null: false
     field :phone_number, :string, null: false
     field :role, :string, default: "guest", null: false
@@ -28,13 +29,16 @@ defmodule BokBok.Accounts.User do
     user
     |> cast(attrs, [
       :username,
+      :email,
       :password,
       :phone_number
     ])
-    |> validate_required([:username, :password, :phone_number])
+    |> validate_required([:username, :email, :password, :phone_number])
+    |> validate_format(:email, ~r/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i)
     |> validate_change(:phone_number, &CustomValidations.validate_phone_number/2)
     |> update_change(:username, &String.downcase/1)
     |> unique_constraint(:username)
+    |> unique_constraint(:email)
     |> unique_constraint(:phone_number)
     |> ChangesetHelpers.put_password_hash()
   end

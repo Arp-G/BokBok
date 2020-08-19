@@ -32,6 +32,22 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
                     ToastAndroid.SHORT,
                     ToastAndroid.BOTTOM
                 );
+
+                channel.push("fetch_conversaions")
+                    .receive("ok", payload => {
+                        load_conversations(payload.conversations);
+                        setLoading(false);
+                        ToastAndroid.showWithGravity(
+                            "Fetched Conversation list !",
+                            ToastAndroid.SHORT,
+                            ToastAndroid.BOTTOM
+                        )
+                    })
+                    .receive("error", err => ToastAndroid.showWithGravity(
+                        "Error, Could not fetch conversations list !",
+                        ToastAndroid.LONG,
+                        ToastAndroid.BOTTOM
+                    ));
             })
             .receive("error", resp => {
                 ToastAndroid.showWithGravity(
@@ -40,23 +56,6 @@ const ChatListScreen = ({ navigation, token, id, conversations, load_conversatio
                     ToastAndroid.BOTTOM
                 );
             });
-
-        channel.push("fetch_conversaions")
-            .receive("ok", payload => {
-                load_conversations(payload.conversations);
-                setLoading(false);
-                ToastAndroid.showWithGravity(
-                    "Fetched Conversation list !",
-                    ToastAndroid.SHORT,
-                    ToastAndroid.BOTTOM
-                )
-            }
-            )
-            .receive("error", err => ToastAndroid.showWithGravity(
-                "Error, Could not fetch conversations list !",
-                ToastAndroid.LONG,
-                ToastAndroid.BOTTOM
-            ));
 
         channel.on("update_unread", payload => {
             update_conversation(payload)

@@ -12,6 +12,7 @@ import authStyles from '../styles/auth';
 const SignupScreen = ({ signin }) => {
 
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone_number, setPhoneNumber] = useState('');
   const [error, setError] = useState({});
@@ -20,7 +21,7 @@ const SignupScreen = ({ signin }) => {
   const onSubmit = async () => {
     try {
       setLoading(true);
-      const response = await bokbokApi.post('/sign_up', { username, phone_number, password });
+      const response = await bokbokApi.post('/sign_up', { username, email, phone_number, password });
       await AsyncStorage.setItem('token', response.data.token);
       await AsyncStorage.setItem('id', `${response.data.id}`);
       signin(response.data.token, response.data.id);
@@ -43,6 +44,15 @@ const SignupScreen = ({ signin }) => {
             autoCorrect={false}
             leftIcon={{ type: 'font-awesome', name: 'user', color: 'navy' }}
             errorMessage={error["username"] ? error["username"].join(", ") : ""}
+          />
+          <Input
+            label="Email"
+            labelStyle={authStyles.label}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            autoCorrect={false}
+            leftIcon={{ type: 'font-awesome', name: 'envelope', color: 'navy' }}
+            errorMessage={error["email"] ? error["email"].join(", ") : ""}
           />
           <Input
             label="Phone Number"
