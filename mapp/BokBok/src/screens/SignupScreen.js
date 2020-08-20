@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ImageBackground, ScrollView } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Text, Button, Input } from 'react-native-elements';
 import { bindActionCreators } from 'redux';
@@ -32,8 +33,9 @@ const SignupScreen = ({ signin }) => {
   }
 
   return (
+
     <ImageBackground source={require('../assets/images/background.jpg')} style={{ width: '100%', height: '100%' }}>
-      <ScrollView contentContainerStyle={authStyles.form}>
+      <KeyboardAwareScrollView contentContainerStyle={authStyles.form}>
         <>
           <Text style={authStyles.heading}>Sign Up for Bok Bok</Text>
           <Input
@@ -84,8 +86,9 @@ const SignupScreen = ({ signin }) => {
             }
           />
         </>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </ImageBackground>
+
   );
 };
 

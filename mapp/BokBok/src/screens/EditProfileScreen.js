@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, ImageBackground, ToastAndroid, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, ImageBackground, ToastAndroid } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import bokbokApi from '../api/bokbok';
 import { Text, Button, Input, Avatar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
@@ -18,7 +19,6 @@ const EditProfileScreen = () => {
     const [showDatePicker, setshowDatePicker] = useState(false);
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
-    const [uploadPercentage, setuploadPercentage] = useState(0);
     const [avatarData, setAvatarData] = useState(null);
 
     const clearState = () => {
@@ -28,7 +28,6 @@ const EditProfileScreen = () => {
         setDob(new Date());
         setshowDatePicker(false);
         setAvatarData(null);
-        setuploadPercentage(0);
     }
 
     const fetchUserProfile = async () => {
@@ -40,7 +39,6 @@ const EditProfileScreen = () => {
             setBio(bio);
             setDob(new Date(dob)); // NOT WORKING, incorrect DOB string
             setAvatar(avatar ? { uri: avatar.original } : null);
-            setLoading(false);
         } catch (err) {
             ToastAndroid.showWithGravity(
                 "User profile does not exists !",
@@ -48,6 +46,7 @@ const EditProfileScreen = () => {
                 ToastAndroid.BOTTOM
             );
         }
+        setLoading(false);
     }
 
     const updateUserProfile = async () => {
@@ -56,24 +55,16 @@ const EditProfileScreen = () => {
         data.append('name', name);
         data.append('bio', bio);
         data.append('dob', dob.toISOString().slice(0, 10));
-        var config = {}
 
         if (avatarData || avatarData == '') {
             let av = avatarData == '' ? avatarData : { name: avatarData.fileName, type: avatarData.type, uri: avatarData.uri };
             data.append('avatar', av);
-            config = {
-                onUploadProgress: function (progressEvent) {
-                    var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                    setuploadPercentage(percentCompleted);
-                    (percentCompleted == 100) && setSaving(false);
-                }
-            }
         }
 
         try {
             setSaving(true);
-            await bokbokApi.post('/user_profile', data, config);
-
+            await bokbokApi.post('/user_profile', data);
+            setSaving(false);
         } catch (err) {
             // There is an issue due to which the requests are successfull but there is always an exception (even when there is no fille upload)
             // this happends when using form data, this is probably why "onUploadProgress" wont work and we can't show file upload percentage
@@ -83,10 +74,8 @@ const EditProfileScreen = () => {
                 ToastAndroid.LONG,
                 ToastAndroid.BOTTOM
             );
+            setSaving(false);
         }
-
-        setSaving(false);
-        // !avatarData && setSaving(false); Could be helpfull when onUploadProgress() works
     }
 
     const changeDob = (_event, date) => {
@@ -97,7 +86,6 @@ const EditProfileScreen = () => {
     useEffect(() => {
         // Every time user opens this page fetch latest user details
         const removeListener = navigation.addListener('focus', () => {
-            setLoading(true);
             fetchUserProfile();
         });
 
@@ -145,7 +133,7 @@ const EditProfileScreen = () => {
         return (
             <ImageBackground source={require('../assets/images/background.jpg')} style={{ width: '100%', height: '100%' }}>
                 <View style={styles.loading}>
-                    <Text style={{ color: 'navy', fontSize: 20 }} > Fetching User profile details...</Text>
+                    <Text style={{ color: 'navy', fontSize: 18, fontWeight: "bold" }} > Fetching User profile details...</Text>
                     <Spinner style={styles.spinner} isVisible={true} size={100} type={'Circle'} color='#d35400' size={50} />
                 </View>
             </ImageBackground>
@@ -160,63 +148,65 @@ const EditProfileScreen = () => {
                 name="md-menu"
                 size={30}
             />
-            <KeyboardAvoidingView behavior={"padding"} style={{ marginTop: '5%', justifyContent: 'center' }} >
-                <ScrollView contentContainerStyle={styles.editProfile} showsVerticalScrollIndicator={false}>
-                    <Avatar
-                        size="large"
-                        rounded
-                        onPress={handle_avatar_update}
-                        icon={{ name: 'user', type: 'font-awesome' }}
-                        showEditButton
-                        overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
-                        source={avatar || null}
-                    />
-                    <Input label="Name"
-                        onChangeText={setName}
-                        value={name}
+            <KeyboardAwareScrollView contentContainerStyle={{ ...styles.editProfile, marginTop: '5%', justifyContent: 'center' }} >
+                <Avatar
+                    size="large"
+                    rounded
+                    onPress={handle_avatar_update}
+                    icon={{ name: 'user', type: 'font-awesome' }}
+                    showEditButton
+                    overlayContainerStyle={{ backgroundColor: 'black', opacity: 0.7 }}
+                    source={avatar || null}
+                />
+                <Input label="Name"
+                    labelStyle={{ color: "navy" }}
+                    onChangeText={setName}
+                    value={name}
+                    activeOpacity={0.7}
+                    autoCapitalize="none"
+                    autoCorrect={false} />
+                <TouchableOpacity
+                    style={styles.datepicker}
+                    onPress={() => setshowDatePicker(true)}>
+                    <Input label="Date of Birth"
+                        labelStyle={{ color: "navy" }}
+                        editable={false}
+                        value={dob.toDateString()}
                         activeOpacity={0.7}
                         autoCapitalize="none"
+                        leftIcon={{ type: 'font-awesome', name: 'calendar', color: 'navy' }}
                         autoCorrect={false} />
-                    <TouchableOpacity
-                        style={styles.datepicker}
-                        onPress={() => setshowDatePicker(true)}>
-                        <Input label="Date of Birth"
-                            editable={false}
-                            value={dob.toDateString()}
-                            activeOpacity={0.7}
-                            autoCapitalize="none"
-                            leftIcon={{ type: 'font-awesome', name: 'calendar', color: 'navy' }}
-                            autoCorrect={false} />
-                    </TouchableOpacity>
-                    {showDatePicker && <DateTimePicker
-                        value={dob}
-                        maximumDate={new Date()}
-                        minimumDate={new Date(1920, 0, 1)}
-                        mode="date"
-                        display="spinner"
-                        onChange={changeDob}
-                        isVisible={false}
-                    />}
-                    <Input label="Bio"
-                        value={bio}
-                        onChangeText={setBio}
-                        leftIcon={{ type: 'font-awesome', name: 'user-circle-o', color: 'navy' }}
-                    />
-                    <Button
+                </TouchableOpacity>
+                {showDatePicker && <DateTimePicker
+                    value={dob}
+                    labelStyle={{ color: "navy" }}
+                    maximumDate={new Date()}
+                    minimumDate={new Date(1920, 0, 1)}
+                    mode="date"
+                    display="spinner"
+                    onChange={changeDob}
+                    isVisible={false}
+                />}
+                <Input label="Bio"
+                    labelStyle={{ color: "navy" }}
+                    value={bio}
+                    onChangeText={setBio}
+                    leftIcon={{ type: 'font-awesome', name: 'user-circle-o', color: 'navy' }}
+                />
+                {saving
+                    ? (<>
+                        <Text style={{fontWeight: "bold"}}>
+                            {`Saving...`}
+                        </Text>
+                        <Spinner style={styles.spinner} isVisible={true} size={20} type={'ThreeBounce'} size={50} />
+                    </>)
+                    : <Button
                         title="Update Profile !"
                         onPress={updateUserProfile}
                     />
-                    {saving
-                        ? (<>
-                            <Spinner style={styles.spinner} isVisible={true} size={20} type={'ThreeBounce'} color='#d35400' size={50} />
-                            <Text>
-                                {`Saving... Uploaded: ${uploadPercentage}%`}
-                            </Text>
-                        </>)
-                        : null
-                    }
-                </ScrollView>
-            </KeyboardAvoidingView>
+                }
+
+            </KeyboardAwareScrollView>
         </ImageBackground>
     );
 };
@@ -227,7 +217,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#262626'
     },
     spinner: {
-        color: 'black',
+        color: 'green',
         paddingTop: 100,
         alignSelf: 'center'
     },

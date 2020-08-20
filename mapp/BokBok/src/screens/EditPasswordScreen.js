@@ -4,6 +4,8 @@ import bokbokApi from '../api/bokbok';
 import { Text, Button, Input } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 var Spinner = require('react-native-spinkit');
 
 const EditPasswordScreen = () => {
@@ -32,42 +34,46 @@ const EditPasswordScreen = () => {
     return (
         <>
             <ImageBackground source={require('../assets/images/background4.jpg')} style={{ width: '100%', height: '100%' }}>
-                <Icon
-                    style={{ paddingLeft: 10 }}
-                    onPress={navigation.toggleDrawer}
-                    name="md-menu"
-                    size={30}
-                />
-                <Text h3 style={{ marginLeft: 30, marginTop: 30 }}> Update your password</Text>
-                <View style={{ marginTop: "25%", alignItems: 'center' }}>
-                    <Input label="Current Password"
-                        onChangeText={setCurrentPassword}
-                        autoCapitalize="none"
-                        secureTextEntry
-                        leftIcon={{ type: 'font-awesome', name: 'unlock-alt', color: 'navy' }}
-                        autoCorrect={false}
-                        errorMessage={error.error} />
-                    <Input label="Password"
-                        onChangeText={setPassword}
-                        autoCapitalize="none"
-                        secureTextEntry
-                        leftIcon={{ type: 'font-awesome', name: 'unlock-alt', color: 'navy' }}
-                        autoCorrect={false}
-                        errorMessage={error.errors && error.errors["password"] ? error.errors["password"].join(", ") : ""} />
-                    <Button
-                        title="Update Password !"
-                        onPress={updateUserPassword}
-                        diabled={saving}
+                <KeyboardAwareScrollView>
+                    <Icon
+                        style={{ paddingLeft: 10 }}
+                        onPress={navigation.toggleDrawer}
+                        name="md-menu"
+                        size={30}
                     />
-                    {saving
-                        ?
-                        (<View style={{ paddingTop: 20 }}>
-                            <Text> Saving... </Text>
-                            <Spinner isVisible={true} size={20} type={'ThreeBounce'} color='red' size={50} />
-                        </View >)
-                        : null
-                    }
-                </View>
+                    <Text style={{ fontSize: 22, fontWeight: "bold", marginLeft: 30, marginTop: 30 }}> Update your password</Text>
+                    <View style={{ marginTop: "25%", alignItems: 'center' }}>
+                        <Input label="Current Password"
+                            onChangeText={setCurrentPassword}
+                            autoCapitalize="none"
+                            secureTextEntry
+                            leftIcon={{ type: 'font-awesome', name: 'unlock-alt', color: 'navy' }}
+                            autoCorrect={false}
+                            labelStyle={{color: 'navy'}}
+                            errorMessage={error.error} />
+                        <Input label="Password"
+                            onChangeText={setPassword}
+                            autoCapitalize="none"
+                            secureTextEntry
+                            leftIcon={{ type: 'font-awesome', name: 'unlock-alt', color: 'navy' }}
+                            autoCorrect={false}
+                            labelStyle={{color: 'navy'}}
+                            errorMessage={error.errors && error.errors["password"] ? error.errors["password"].join(", ") : ""} />
+                        <Button
+                            title="Update Password !"
+                            onPress={updateUserPassword}
+                            diabled={saving}
+                        />
+                        {saving
+                            ?
+                            (<View style={{ paddingTop: 20 }}>
+                                <Text> Saving... </Text>
+                                <Spinner isVisible={true} size={20} type={'ThreeBounce'} color='red' size={50} />
+                            </View >)
+                            : null
+                        }
+                    </View>
+                </KeyboardAwareScrollView>
             </ImageBackground>
         </>
     );

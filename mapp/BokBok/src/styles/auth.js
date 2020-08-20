@@ -4,14 +4,14 @@ export default StyleSheet.create({
   button: {
     width: 200,
     marginLeft: 15,
-    marginTop: 30
+    marginTop: 10
   },
   form: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
     width: '100%',
-    padding: 20
+    paddingLeft: 20
   },
   heading: {
     color: 'black',

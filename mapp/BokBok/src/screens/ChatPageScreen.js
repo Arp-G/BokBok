@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, TextInput, TouchableOpacity, ImageBackground, Keyboard, PixelRatio } from 'react-native';
+import { StyleSheet, View, FlatList, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import { Avatar, Badge, Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { Socket, Presence } from "phoenix";
 import UserViewModal from '../components/userViewModal';
 import moment from 'moment';
-import EmptyResult from '../components/emptyResult';
+
 import { WEBSOCKET_API } from '../helpers/api';
 
 var Spinner = require('react-native-spinkit');
@@ -151,7 +151,6 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
 
       <View style={{ flex: 0.81 }}>
         {
-          messages.length > 0 ?
             <ImageBackground
               source={require('../assets/images/chat-background.png')}
               style={{ width: '100%', height: '100%' }}>
@@ -162,7 +161,6 @@ const ChatPageScreen = ({ navigation, token, id, route: { params: { conversation
                 keyExtractor={item => item.id.toString()}
               />
             </ImageBackground>
-            : <EmptyResult text={`You don't have any conversations with ${conversation.profile && conversation.profile.name != '' ? conversation.profile.name : conversation.username}`} />
         }
       </View>
 
@@ -212,7 +210,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 0.053,
     marginBottom: 5,
-    minHeight: 30
+    minHeight: 30,
+    backgroundColor: '#f8f8f8'
   },
   inputArea: {
     flex: 9,

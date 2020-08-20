@@ -16,6 +16,7 @@ export default ({ text, routeName, nestedRoute } = props) => {
 
 const styles = StyleSheet.create({
     link: {
+        marginTop: -5, 
         color: 'blue',
         marginLeft: 20
     }

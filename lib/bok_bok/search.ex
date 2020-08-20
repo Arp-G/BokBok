@@ -23,7 +23,7 @@ defmodule BokBok.Search do
 
   def get_random_people(current_user) do
     max = Repo.aggregate(User, :count, :id)
-    random_offset = :rand.uniform(max) - 1
+    random_offset = if max < 10, do: 0, else: :rand.uniform(max) - 1
 
     from(u in User, limit: 10, offset: ^random_offset)
     |> ignore_current_user(current_user)

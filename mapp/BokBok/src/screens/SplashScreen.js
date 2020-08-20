@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     paddingTop: 200
   },
   title: {
-    fontSize: 80,
+    fontSize: 60,
     color: 'white',
     fontFamily: 'cursive',
     fontWeight: 'bold'

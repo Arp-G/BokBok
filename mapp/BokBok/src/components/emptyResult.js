@@ -10,7 +10,7 @@ export default ({ text }) => {
                 source={require('../assets/images/empty-page-background.jpg')}
                 style={{ width: '100%', height: '100%' }}>
                 <Text style={{
-                    fontSize: 30,
+                    fontSize: 25,
                     fontFamily: 'cursive',
                     marginTop: '50%',
                     alignSelf: 'center',

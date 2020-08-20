@@ -145,7 +145,9 @@ const ContainerScreen = ({ token, id, isLoading, restore_token, signout }) => {
                             <DrawerItem
                                 label="Accounts Section"
                                 labelStyle={{
-                                    fontSize: 30,
+                                    fontSize: 25,
+                                    fontWeight: "bold",
+                                    color: "navy",
                                     fontFamily: 'cursive',
                                     height: 50
                                 }} />
