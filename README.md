@@ -9,6 +9,8 @@
 
 Click [here](https://bokbok.s3.ap-south-1.amazonaws.com/bokbok.gif) to see a demo of the app.
 
+**Download the app [here](https://github.com/Arp-G/BokBok/blob/master/showcase/BokBok.apk).**
+
 ## Chat with people, live online status tracking
 <p>
   <img src="https://github.com/Arp-G/BokBok/blob/master/showcase/BokBok%20Screeshots/ChatPage.PNG" />
