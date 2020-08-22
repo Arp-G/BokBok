@@ -34,6 +34,7 @@ defmodule BokBok.Accounts.User do
       :phone_number
     ])
     |> validate_required([:username, :email, :password, :phone_number])
+    |> validate_length(:password, min: 5)
     |> validate_format(:email, ~r/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i)
     |> validate_change(:phone_number, &CustomValidations.validate_phone_number/2)
     |> update_change(:username, &String.downcase/1)
