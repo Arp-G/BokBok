@@ -32,6 +32,7 @@ defmodule BokBok.Accounts.UserProfile do
     |> unique_constraint(:user_id)
   end
 
+  @dialyzer :no_match
   def avatar_changeset(user_profile, attrs) do
     case attrs["avatar"] do
       "" ->
