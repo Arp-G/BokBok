@@ -2,9 +2,10 @@ name: Elixir/Phoenix CI
 
 on:
   push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+    branches:
+      - master
+    pull_request:
+      types: [opened, edited, closed, reopened, synchronize]
 
 jobs:
   test:
