@@ -2,10 +2,9 @@ name: Elixir/Phoenix CI
 
 on:
   push:
-    branches:
-      - master
-    pull_request:
-      types: [opened, edited, closed, reopened, synchronize]
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   test:
@@ -32,8 +31,7 @@ jobs:
           elixir-version: '1.10.4'
 
       - name: Retrieve Mix Dependencies Cache
-        uses: actions/cache@v1
-        id: mix-cache # id to use in retrieve action
+        uses: actions/cache@v2
         with:
           path: deps
           key: ${{ runner.os }}-${{ otp-version }}-${{ elixir-version }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
@@ -49,8 +47,7 @@ jobs:
 
       # Dialyzer
       - name: Retrieve PLT Cache
-        uses: actions/cache@v1
-        id: plt-cache
+        uses: actions/cache@v2
         with:
           path: priv/plts
           key: ${{ runner.os }}-${{ otp-version }}-${{ elixir-version }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
