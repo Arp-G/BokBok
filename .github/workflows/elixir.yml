@@ -2,9 +2,10 @@ name: Elixir/Phoenix CI
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches:
+      - master
+    pull_request:
+      types: [opened, edited, closed, reopened, synchronize]
 
 jobs:
   test:
@@ -26,6 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
+        id: setup-elixir # To use "otp-version" and "elixir-version" variables in cache key
         with:
           otp-version: '23.0'
           elixir-version: '1.10.4'
@@ -34,7 +36,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: deps
-          key: ${{ runner.os }}-${{ otp-version }}-${{ elixir-version }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          key: ${{ runner.os }}-${{ steps.setup-elixir.otp-version }}-${{ steps.setup-elixir.elixir-version }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
 
       - name: Fetch dependencies
         run: mix deps.get
@@ -47,10 +49,11 @@ jobs:
 
       # Dialyzer
       - name: Retrieve PLT Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v1
+        id: plt-cache # To check for cache miss like `steps.plt-cache.outputs.cache-hit != 'true'`
         with:
           path: priv/plts
-          key: ${{ runner.os }}-${{ otp-version }}-${{ elixir-version }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          key: ${{ runner.os }}-${{ steps.setup-elixir.otp-version }}-${{ steps.setup-elixir.elixir-version }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
   
       - name: Create PLTs when cache miss
         if: steps.plt-cache.outputs.cache-hit != 'true'
