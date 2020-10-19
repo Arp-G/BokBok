@@ -115,7 +115,13 @@ defmodule BokBok.UserCommunication do
           |> repo.insert()
         end)
         |> Multi.run(:user_conversation_receiver, fn repo, %{conversation: conversation} ->
-          %UserConversation{} |> UserConversation.changeset(%{  type: :private, user_id: receiver_id,  receiver_id: user_id, conversation_id: conversation.id })
+          %UserConversation{}
+          |> UserConversation.changeset(%{
+            type: :private,
+            user_id: receiver_id,
+            receiver_id: user_id,
+            conversation_id: conversation.id
+          })
           |> repo.insert()
         end)
         |> Repo.transaction()
