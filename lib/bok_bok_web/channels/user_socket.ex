@@ -17,7 +17,6 @@ defmodule BokBokWeb.UserSocket do
         |> BokBok.Accounts.get_user()
         |> case do
           %User{} = user ->
-
             {:ok, assign(socket, user_id: user.id, name: user.username)}
 
           _ ->

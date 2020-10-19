@@ -2,7 +2,7 @@ defmodule BokBokWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :bok_bok
 
   socket "/socket", BokBokWeb.UserSocket,
-   # This ensures that any idle connections are closed by Phoenix before they reach Heroku's 55-second timeout window.
+    # This ensures that any idle connections are closed by Phoenix before they reach Heroku's 55-second timeout window.
     websocket: [timeout: 45_000],
     longpoll: false
 

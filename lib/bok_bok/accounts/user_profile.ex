@@ -34,7 +34,6 @@ defmodule BokBok.Accounts.UserProfile do
 
   def avatar_changeset(user_profile, attrs) do
     case attrs["avatar"] do
-      
       "" ->
         avatar = if user_profile.avatar, do: user_profile.avatar.file_name, else: ""
 
