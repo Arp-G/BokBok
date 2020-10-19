@@ -10,7 +10,11 @@ defmodule BokBok.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      dialyzer: [
+        plt_core_path: "priv/plts",
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      ]
     ]
   end
 
@@ -41,7 +45,6 @@ defmodule BokBok.MixProject do
       {:ecto_enum, "~> 1.4"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.11"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:argon2_elixir, "~> 2.0"},
@@ -50,10 +53,18 @@ defmodule BokBok.MixProject do
       {:ex_aws, "~> 2.0"},
       {:ex_aws_s3, "~> 2.0"},
       {:arc_ecto, "~> 0.11.2"},
-      {:faker, "~> 0.12", only: [:dev, :test]},
       {:kadabra, "~> 0.4.4"},
       {:pigeon, "~> 1.5.1"},
-      {:phoenix_live_dashboard, "~> 0.1"}
+      {:phoenix_live_dashboard, "~> 0.1"},
+
+      # dev, test
+      {:faker, "~> 0.12", only: [:dev, :test]},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
+
+      # Static code analysis
+      {:sobelow, "~> 0.8", only: :dev},
+      {:credo, "~> 1.5.0-rc.2", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 
@@ -67,7 +78,9 @@ defmodule BokBok.MixProject do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"],
+      # Run static code analysis tools and tests to check code quality
+      quality: ["format", "credo --strict", "sobelow --verbose", "dialyzer", "test"]
     ]
   end
 end
