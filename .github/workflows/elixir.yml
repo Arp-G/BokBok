@@ -68,7 +68,9 @@ jobs:
 
       # Pronto
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.6'
 
       - name: Setup pronto
         run: gem install pronto-credo --no-document
