@@ -66,5 +66,12 @@ jobs:
       - name: Run Sobelow
         run: mix sobelow --exit
 
-      # - name: Run Credo
-      #   run: mix credo --strict 
+      # Pronto
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+
+      - name: Setup pronto
+        run: gem install pronto-credo --no-document
+        
+      - name: Run Pronto
+        run: PRONTO_PULL_REQUEST_ID="$(jq --raw-output .number "$GITHUB_EVENT_PATH")" PRONTO_GITHUB_ACCESS_TOKEN="${{ github.token }}" pronto run -f github_pr -c origin/${{ github.base_ref }}
