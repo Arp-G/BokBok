@@ -68,7 +68,7 @@ jobs:
 
       # Pronto
       - name: Setup Ruby
-      - uses: actions/setup-ruby@v1
+        uses: actions/setup-ruby@v1
         with:
           ruby-version: '2.6'
 
