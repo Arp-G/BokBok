@@ -40,8 +40,8 @@ jobs:
       - name: Fetch dependencies
         run: mix deps.get
 
-      # - name: Run tests
-      #   run: mix test --cover
+      - name: Run tests
+        run: mix test --cover
 
       - name: Check code formatting
         run: mix format --check-formatted
@@ -60,8 +60,8 @@ jobs:
           mkdir -p priv/plts
           mix dialyzer --plt
   
-      # - name: Run dialyzer
-      #   run: mix dialyzer --no-check
+      - name: Run dialyzer
+        run: mix dialyzer --no-check
 
       - name: Run Sobelow
         run: mix sobelow --exit
@@ -74,9 +74,6 @@ jobs:
 
       - name: Setup pronto for credo
         run: gem install pronto-credo --no-document
-
-      - name: Setup pronto for dialyzer
-        run: gem install pronto-dialyxir --no-document
         
       - run: git fetch
 
