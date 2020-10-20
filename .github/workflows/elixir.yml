@@ -40,8 +40,8 @@ jobs:
       - name: Fetch dependencies
         run: mix deps.get
 
-      - name: Run tests
-        run: mix test --cover
+      # - name: Run tests
+      #   run: mix test --cover
 
       - name: Check code formatting
         run: mix format --check-formatted
@@ -60,8 +60,8 @@ jobs:
           mkdir -p priv/plts
           mix dialyzer --plt
   
-      - name: Run dialyzer
-        run: mix dialyzer --no-check
+      # - name: Run dialyzer
+      #   run: mix dialyzer --no-check
 
       - name: Run Sobelow
         run: mix sobelow --exit
@@ -76,4 +76,6 @@ jobs:
         run: gem install pronto-credo --no-document
         
       - run: git fetch
+
+      - name: Run pronto
       - run: PRONTO_PULL_REQUEST_ID="$(jq --raw-output .number "$GITHUB_EVENT_PATH")" PRONTO_GITHUB_ACCESS_TOKEN="${{ github.token }}" pronto run -f github_pr -c origin/master
