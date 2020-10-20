@@ -33,4 +33,12 @@ npm-debug.log
 # this depending on your deployment strategy.
 /priv/static/
 
+# Ignore environment dependent files like dialyzer plts and soblew 
+# Dialyzer
+/priv/plts/*.plt
+/priv/plts/*.plt.hash
+
+# Sobelow
+.sobelow
+
 *.secret.exs

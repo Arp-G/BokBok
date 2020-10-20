@@ -42,4 +42,5 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
-import_config "dev.secret.exs"
+# Avoid error in CI where secret is not present
+if File.exists?("config/dev.secret.exs"), do: import_config("dev.secret.exs")
