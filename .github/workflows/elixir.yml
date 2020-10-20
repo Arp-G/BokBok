@@ -72,8 +72,11 @@ jobs:
         with:
           ruby-version: '2.6'
 
-      - name: Setup pronto
+      - name: Setup pronto for credo
         run: gem install pronto-credo --no-document
+
+      - name: Setup pronto for dialyzer
+        run: gem install pronto-dialyxir --no-document
         
       - run: git fetch
 

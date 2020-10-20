@@ -6,4 +6,8 @@ defmodule Abc do
       _ -> :rescued
     end
   end
+
+  def bad do
+    raise ArithmeticError
+  end
 end
