@@ -79,8 +79,8 @@ defmodule BokBok.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"],
-      # Run static code analysis tools and tests to check code quality
-      quality: ["format", "credo --strict", "sobelow --verbose", "dialyzer", "test"]
+      # Run static code analysis tools to check code quality
+      quality: ["format", "sobelow --verbose", "dialyzer", "credo --strict"]
     ]
   end
 end
