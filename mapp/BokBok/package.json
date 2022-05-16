@@ -21,7 +21,7 @@
     "@react-navigation/material-top-tabs": "^5.2.15",
     "@react-navigation/native": "^5.7.0",
     "@react-navigation/stack": "^5.7.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "moment": "^2.27.0",
     "phoenix": "^1.5.4",
     "react": "16.13.1",
