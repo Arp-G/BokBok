@@ -22,7 +22,7 @@
     "@react-navigation/native": "^5.7.0",
     "@react-navigation/stack": "^5.7.0",
     "axios": "^0.19.2",
-    "moment": "^2.27.0",
+    "moment": "^2.29.4",
     "phoenix": "^1.5.4",
     "react": "16.13.1",
     "react-native": "0.63.0",
